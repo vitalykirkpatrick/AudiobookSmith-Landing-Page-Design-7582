@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import * as FiIcons from 'react-icons/fi';
 import SafeIcon from '../../common/SafeIcon';
-import supabase from '../../lib/supabase';
+import database from '../../lib/database'; // Using custom database instead of supabase
 
 const { FiCheck, FiX, FiShield, FiZap, FiHeart, FiDownload, FiMail, FiStar, FiMic } = FiIcons;
 
@@ -27,7 +27,7 @@ const Pricing = () => {
       ]
     },
     {
-      name: "Premium Audiobook Plan", 
+      name: "Premium Audiobook Plan",
       amount: 399,
       priceId: "price_1Ri3mt2HUfh6a9CUYRd1xDud",
       paymentLink: "https://buy.stripe.com/4gM4gs3mwckGavF9Wz4gg00",
@@ -46,7 +46,7 @@ const Pricing = () => {
     {
       name: "Enterprise Audiobook Plan",
       amount: 899,
-      priceId: "price_1Ri3mt2HUfh6a9CUKoy2mlo6", 
+      priceId: "price_1Ri3mt2HUfh6a9CUKoy2mlo6",
       paymentLink: "https://buy.stripe.com/8x2eV6f5egAWeLVfgT4gg01",
       currency: "usd",
       planKey: "enterprise",
@@ -68,7 +68,7 @@ const Pricing = () => {
     "Royalty splits required": false,
     "Manuscript privacy": true,
     "One-time payment": true,
-    "Commercial licensing": true,
+    "Commercial licensing": true
   };
 
   const scrollToForm = () => {
@@ -85,7 +85,7 @@ const Pricing = () => {
   const handlePaymentClick = async (plan) => {
     try {
       setIsLoading(true);
-      
+
       // Get form data if available from the transform-form
       const formElement = document.getElementById('transform-form');
       let userData = {};
@@ -104,34 +104,27 @@ const Pricing = () => {
           };
         }
       }
-      
-      // Store preliminary user data in Supabase
+
+      // Store preliminary user data in custom database
       if (userData.email) {
-        const { data, error } = await supabase
-          .from('users_audiobooksmith')
-          .upsert([
-            { 
-              email: userData.email,
-              name: userData.name,
-              book_title: userData.bookTitle,
-              plan: plan.planKey,
-              payment_status: 'pending'
-            }
-          ], { onConflict: 'email' });
-          
+        const { data, error } = await database.upsert('users_audiobooksmith', {
+          email: userData.email,
+          name: userData.name,
+          book_title: userData.bookTitle,
+          plan: plan.planKey,
+          payment_status: 'pending'
+        }, 'email');
+
         if (error) {
           console.error('Error storing preliminary user data:', error);
         }
       }
-      
+
       // Create the success URL with plan parameter and user data
       const currentDomain = window.location.origin;
-      const userDataParam = userData.email ? 
-        `&name=${encodeURIComponent(userData.name || '')}&email=${encodeURIComponent(userData.email)}&bookTitle=${encodeURIComponent(userData.bookTitle || '')}` : 
-        '';
-      
+      const userDataParam = userData.email ? `&name=${encodeURIComponent(userData.name || '')}&email=${encodeURIComponent(userData.email)}&bookTitle=${encodeURIComponent(userData.bookTitle || '')}` : '';
       const successUrl = `${currentDomain}/#/onboarding?session_id={CHECKOUT_SESSION_ID}&plan=${plan.planKey}${userDataParam}`;
-      
+
       // Open Stripe checkout with added description
       const stripeUrl = `${plan.paymentLink}?success_url=${encodeURIComponent(successUrl)}&client_reference_id=${userData.email || ''}&description=${encodeURIComponent(plan.description.join(' • '))}`;
       
@@ -186,6 +179,7 @@ const Pricing = () => {
               </div>
               <p className="text-gray-600 mt-2 text-sm">Try before you buy</p>
             </div>
+
             <div className="space-y-3 mb-8 flex-grow">
               <div className="flex items-start space-x-3">
                 <SafeIcon icon={FiCheck} className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
@@ -212,6 +206,7 @@ const Pricing = () => {
                 <span className="text-gray-500">AudiobookSmith watermark</span>
               </div>
             </div>
+
             <button
               onClick={handleFreePlanClick}
               disabled={isLoading}
@@ -238,6 +233,7 @@ const Pricing = () => {
               </div>
               <p className="text-gray-600 mt-2 text-sm">Perfect for shorter books</p>
             </div>
+
             <div className="space-y-3 mb-8 flex-grow">
               {pricingPlans[0].description.map((feature, index) => (
                 <div key={index} className="flex items-start space-x-3">
@@ -246,6 +242,7 @@ const Pricing = () => {
                 </div>
               ))}
             </div>
+
             <button
               onClick={() => handlePaymentClick(pricingPlans[0])}
               disabled={isLoading}
@@ -268,11 +265,11 @@ const Pricing = () => {
             <div className="absolute top-0 right-0 bg-yellow-400 text-xs font-bold text-gray-900 py-1 px-3 rotate-45 transform translate-x-2 -translate-y-1 shadow-sm">
               POPULAR
             </div>
-            
+
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-32 h-32 bg-white opacity-10 rounded-full transform translate-x-1/2 -translate-y-1/2"></div>
             <div className="absolute bottom-0 left-0 w-24 h-24 bg-white opacity-10 rounded-full transform -translate-x-1/2 translate-y-1/2"></div>
-            
+
             <div className="relative z-10">
               <div className="mb-6">
                 <div className="text-lg font-semibold mb-2">{pricingPlans[1].name}</div>
@@ -282,6 +279,7 @@ const Pricing = () => {
                 </div>
                 <p className="opacity-90 mt-2 text-sm">Best for novels and professional publications</p>
               </div>
+
               <div className="space-y-3 mb-8 flex-grow">
                 {pricingPlans[1].description.map((feature, index) => (
                   <div key={index} className="flex items-start space-x-3">
@@ -290,6 +288,7 @@ const Pricing = () => {
                   </div>
                 ))}
               </div>
+
               <button
                 onClick={() => handlePaymentClick(pricingPlans[1])}
                 disabled={isLoading}
@@ -298,6 +297,7 @@ const Pricing = () => {
                 <SafeIcon icon={FiDownload} className="w-5 h-5 mr-2" />
                 {isLoading ? 'Processing...' : 'Select Premium'}
               </button>
+
               <div className="mt-3 text-center text-sm opacity-80">30-day money-back guarantee</div>
             </div>
           </motion.div>
@@ -321,6 +321,7 @@ const Pricing = () => {
               </div>
               <p className="text-gray-300 mt-2 text-sm">Premium features with voice cloning</p>
             </div>
+
             <div className="space-y-3 mb-8 flex-grow">
               {pricingPlans[2].description.map((feature, index) => (
                 <div key={index} className="flex items-start space-x-3">
@@ -329,6 +330,7 @@ const Pricing = () => {
                 </div>
               ))}
             </div>
+
             <button
               onClick={() => handlePaymentClick(pricingPlans[2])}
               disabled={isLoading}
@@ -354,15 +356,9 @@ const Pricing = () => {
           <div className="p-6">
             <div className="space-y-4">
               {Object.entries(competitorFeatures).map(([feature, included], index) => (
-                <div
-                  key={index}
-                  className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0"
-                >
+                <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100 last:border-b-0">
                   <span className="text-gray-700 font-medium">{feature}</span>
-                  <SafeIcon
-                    icon={included ? FiCheck : FiX}
-                    className={`w-5 h-5 ${included ? 'text-green-500' : 'text-red-500'}`}
-                  />
+                  <SafeIcon icon={included ? FiCheck : FiX} className={`w-5 h-5 ${included ? 'text-green-500' : 'text-red-500'}`} />
                 </div>
               ))}
             </div>

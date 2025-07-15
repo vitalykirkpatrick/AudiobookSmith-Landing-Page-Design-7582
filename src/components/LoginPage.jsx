@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import * as FiIcons from 'react-icons/fi';
 import SafeIcon from '../common/SafeIcon';
-import supabase from '../lib/supabase';
+import database from '../lib/database'; // Using custom database instead of supabase
 
 const { FiUser, FiLock, FiMail, FiArrowLeft, FiAlertTriangle, FiEye, FiEyeOff } = FiIcons;
 
@@ -19,6 +19,7 @@ const LoginPage = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    
     if (!email || !password) {
       setError('Please enter both email and password');
       return;
@@ -28,7 +29,7 @@ const LoginPage = () => {
       setIsLoading(true);
       setError(null);
 
-      const { data, error: loginError } = await supabase.auth.signInWithPassword({
+      const { data, error: loginError } = await database.signIn({
         email,
         password,
       });
@@ -47,6 +48,7 @@ const LoginPage = () => {
 
   const handleResetPassword = async (e) => {
     e.preventDefault();
+    
     if (!email) {
       setError('Please enter your email address');
       return;
@@ -56,9 +58,7 @@ const LoginPage = () => {
       setIsLoading(true);
       setError(null);
 
-      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/#/reset-password`,
-      });
+      const { error: resetError } = await database.resetPasswordForEmail(email);
 
       if (resetError) throw resetError;
 

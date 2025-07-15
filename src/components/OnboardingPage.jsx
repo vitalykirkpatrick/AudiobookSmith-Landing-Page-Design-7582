@@ -39,6 +39,7 @@ const OnboardingPage = () => {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
   const [showVoiceInstructions, setShowVoiceInstructions] = useState(false);
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [recordingBlob, setRecordingBlob] = useState(null);
@@ -53,6 +54,9 @@ const OnboardingPage = () => {
   const wordCount = formData.sampleText ? formData.sampleText.split(/\s+/).filter(Boolean).length : 0;
   const maxWords = 5000;
   const maxChars = 25000;
+
+  // Voice permission text that users need to read
+  const voicePermissionText = `I, [Your Name], hereby grant AudiobookSmith permission to use this voice recording to create an AI voice model for generating audio content based on my manuscript. I understand that this voice sample will be used solely for creating my audiobook and will not be shared with third parties or used for any other commercial purposes without my explicit consent. I confirm that I am the rightful owner of this voice recording and have the authority to grant this permission.`;
 
   // Plan details mapping
   const planDetails = {
@@ -109,25 +113,22 @@ const OnboardingPage = () => {
       if (sessionId) {
         setLoading(true);
         try {
-          // Check if this session exists in our database or validate with Stripe API
-          // This is a mock check - in a real app you'd verify with Stripe
           setTimeout(async () => {
             // Update user record in Supabase if email exists
             if (emailFromUrl) {
               const { error } = await supabase
                 .from('users_audiobooksmith')
-                .update({
+                .upsert({
+                  email: emailFromUrl,
                   payment_status: 'completed',
                   session_id: sessionId,
                   plan: planFromUrl
-                })
-                .eq('email', emailFromUrl);
+                }, { onConflict: 'email' });
 
               if (error) {
                 console.error('Error updating payment status:', error);
               }
             }
-
             setPaymentVerified(true);
             setLoading(false);
           }, 1500);
@@ -147,7 +148,6 @@ const OnboardingPage = () => {
 
   const validateForm = () => {
     const newErrors = {};
-
     if (!formData.name) newErrors.name = 'Name is required';
     if (!formData.email) newErrors.email = 'Email is required';
     if (!formData.email.includes('@')) newErrors.email = 'Valid email is required';
@@ -180,7 +180,6 @@ const OnboardingPage = () => {
     }
 
     if (!validateForm()) {
-      // Scroll to the first error
       const firstErrorField = Object.keys(errors)[0];
       const errorElement = document.getElementById(firstErrorField);
       if (errorElement) {
@@ -194,7 +193,7 @@ const OnboardingPage = () => {
 
       // For free plan users, we need to create an account
       if (formData.plan === 'free') {
-        // First register the user with Supabase Auth
+        // First register the user with Supabase
         const { data: authData, error: authError } = await supabase.auth.signUp({
           email: formData.email,
           password: formData.password,
@@ -213,24 +212,23 @@ const OnboardingPage = () => {
         // Then store additional user data
         const { error: dbError } = await supabase
           .from('users_audiobooksmith')
-          .insert([
-            {
-              email: formData.email,
-              name: formData.name,
-              book_title: formData.bookTitle,
-              book_genre: formData.bookGenre,
-              word_count: formData.wordCount,
-              plan: formData.plan,
-              sample_text: formData.sampleText,
-              requirements: formData.requirements,
-              preferred_voice: formData.preferredVoice,
-              payment_status: 'free_tier'
-            }
-          ]);
+          .insert({
+            id: authData.user?.id,
+            email: formData.email,
+            name: formData.name,
+            book_title: formData.bookTitle,
+            book_genre: formData.bookGenre,
+            word_count: formData.wordCount,
+            plan: formData.plan,
+            sample_text: formData.sampleText,
+            requirements: formData.requirements,
+            preferred_voice: formData.preferredVoice,
+            payment_status: 'free_tier'
+          });
 
         if (dbError) {
           console.error("Database error during insert:", dbError);
-          if (dbError.code === '23505') { // Unique violation
+          if (dbError.message && dbError.message.includes('already exists')) {
             throw new Error('An account with this email already exists. Please log in instead.');
           }
           throw dbError;
@@ -248,27 +246,26 @@ const OnboardingPage = () => {
           }
         });
 
-        if (authError && authError.message !== 'User already registered') {
+        if (authError && !authError.message.includes('already registered')) {
           throw authError;
         }
 
         // Update user record with form data
         const { error: dbError } = await supabase
           .from('users_audiobooksmith')
-          .upsert([
-            {
-              email: formData.email,
-              name: formData.name,
-              book_title: formData.bookTitle,
-              book_genre: formData.bookGenre,
-              word_count: formData.wordCount,
-              plan: formData.plan,
-              requirements: formData.requirements,
-              preferred_voice: formData.preferredVoice,
-              payment_status: 'completed',
-              session_id: sessionId
-            }
-          ], { onConflict: 'email' });
+          .upsert({
+            id: authData.user?.id,
+            email: formData.email,
+            name: formData.name,
+            book_title: formData.bookTitle,
+            book_genre: formData.bookGenre,
+            word_count: formData.wordCount,
+            plan: formData.plan,
+            requirements: formData.requirements,
+            preferred_voice: formData.preferredVoice,
+            payment_status: 'completed',
+            session_id: sessionId
+          }, { onConflict: 'email' });
 
         if (dbError) {
           throw dbError;
@@ -276,7 +273,7 @@ const OnboardingPage = () => {
       }
 
       // Handle manuscript and voice file uploads here (if needed)
-      // This would typically involve uploading to Supabase storage
+      // This would typically involve uploading to Supabase Storage
 
       // Set submission success
       setIsSubmitted(true);
@@ -294,7 +291,6 @@ const OnboardingPage = () => {
 
     // Special handling for word count dropdown
     if (name === 'wordCount') {
-      // Check if we need to upgrade based on selection
       const needsUpgrade = value !== 'Less than 5,000' && formData.plan === 'free';
       setRequiresUpgrade(needsUpgrade);
     }
@@ -306,23 +302,27 @@ const OnboardingPage = () => {
 
     // Clear error for this field when user starts typing
     if (errors[name]) {
-      setErrors({ ...errors, [name]: undefined });
+      setErrors({
+        ...errors,
+        [name]: undefined
+      });
     }
   };
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
     const inputName = e.target.name;
-
     if (file) {
       setFormData({
         ...formData,
         [inputName]: file
       });
-
       // Clear error for this field
       if (errors[inputName]) {
-        setErrors({ ...errors, [inputName]: undefined });
+        setErrors({
+          ...errors,
+          [inputName]: undefined
+        });
       }
     }
   };
@@ -340,13 +340,18 @@ const OnboardingPage = () => {
       recorder.onstop = () => {
         const blob = new Blob(chunks, { type: 'audio/wav' });
         setRecordingBlob(blob);
-        setFormData({ ...formData, voiceRecording: blob });
+        setFormData({
+          ...formData,
+          voiceRecording: blob,
+          voiceFile: null // Clear file upload when recording
+        });
         stream.getTracks().forEach(track => track.stop());
       };
 
       recorder.start();
       setMediaRecorder(recorder);
       setIsRecording(true);
+      setRecordingTime(0);
 
       // Auto-stop after 30 seconds
       setTimeout(() => {
@@ -367,6 +372,29 @@ const OnboardingPage = () => {
       setIsRecording(false);
     }
   };
+
+  const handleVoiceFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({
+        ...formData,
+        voiceFile: file,
+        voiceRecording: null // Clear recording when uploading file
+      });
+      setRecordingBlob(null);
+    }
+  };
+
+  // Recording timer
+  useEffect(() => {
+    let interval;
+    if (isRecording) {
+      interval = setInterval(() => {
+        setRecordingTime(prev => prev + 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [isRecording]);
 
   const genres = [
     'Fiction', 'Non-Fiction', 'Mystery/Thriller', 'Romance', 'Sci-Fi/Fantasy',
@@ -411,7 +439,8 @@ const OnboardingPage = () => {
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Payment Required</h2>
           <p className="text-gray-600 mb-6">
-            This page is only accessible after completing a payment or selecting the free tier. Please return to our pricing page to get started.
+            This page is only accessible after completing a payment or selecting the free tier. 
+            Please return to our pricing page to get started.
           </p>
           <button
             onClick={() => navigate('/')}
@@ -480,7 +509,9 @@ const OnboardingPage = () => {
                   {planFromUrl === 'free' ? 'Create Your Free Sample' : 'Welcome to AudiobookSmith! 🎉'}
                 </h1>
                 <p className="text-xl text-gray-600 mb-8">
-                  {planFromUrl === 'free' ? 'Set up your account and generate a free audiobook sample' : 'Thank you for your purchase. Let\'s set up your audiobook project.'}
+                  {planFromUrl === 'free' 
+                    ? 'Set up your account and generate a free audiobook sample' 
+                    : 'Thank you for your purchase. Let\'s set up your audiobook project.'}
                 </p>
               </motion.div>
 
@@ -657,54 +688,6 @@ const OnboardingPage = () => {
                       </div>
                     </div>
 
-                    <div>
-                      <label htmlFor="wordCount" className="block text-sm font-medium text-gray-700 mb-2">
-                        Approximate Word Count
-                      </label>
-                      <select
-                        id="wordCount"
-                        name="wordCount"
-                        value={formData.wordCount}
-                        onChange={handleChange}
-                        className={`w-full px-4 py-3 border ${errors.wordCount ? 'border-red-300 bg-red-50' : 'border-gray-300'} rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all`}
-                        disabled={formData.plan === 'free'}
-                      >
-                        <option value="Less than 5,000">Less than 5,000 words (Free Sample)</option>
-                        {formData.plan !== 'free' && wordCountOptions.slice(1).map((option) => (
-                          <option key={option} value={option}>
-                            {option} words
-                          </option>
-                        ))}
-                      </select>
-                      {formData.plan === 'free' && (
-                        <p className="mt-1 text-xs text-primary-600">
-                          Free plan is limited to 5,000 words. Upgrade for longer content.
-                        </p>
-                      )}
-                      {errors.wordCount && <p className="mt-1 text-sm text-red-600">{errors.wordCount}</p>}
-                    </div>
-
-                    {/* For paid plans - file upload */}
-                    {formData.plan !== 'free' && (
-                      <div>
-                        <label htmlFor="manuscriptFile" className="block text-sm font-medium text-gray-700 mb-2">
-                          Upload Manuscript *
-                        </label>
-                        <input
-                          type="file"
-                          id="manuscriptFile"
-                          name="manuscriptFile"
-                          onChange={handleFileUpload}
-                          accept=".txt,.doc,.docx,.pdf,.epub"
-                          className={`w-full px-4 py-3 border ${errors.manuscriptFile ? 'border-red-300 bg-red-50' : 'border-gray-300'} rounded-lg focus:border-primary-500 focus:ring-2 focus:ring-primary-200 transition-all`}
-                        />
-                        {errors.manuscriptFile && <p className="mt-1 text-sm text-red-600">{errors.manuscriptFile}</p>}
-                        <p className="mt-1 text-xs text-gray-500">
-                          Supported formats: TXT, DOC, DOCX, PDF, EPUB
-                        </p>
-                      </div>
-                    )}
-
                     {/* For free plan - sample text area */}
                     {formData.plan === 'free' && (
                       <div>
@@ -765,7 +748,7 @@ const OnboardingPage = () => {
                           className="mr-2"
                         />
                         <span className="text-sm font-medium text-gray-700">
-                          Use my voice for narration (Upload or record up to 30 seconds)
+                          Use my voice for narration (Record or upload up to 30 seconds)
                         </span>
                       </label>
                     </div>
@@ -782,49 +765,73 @@ const OnboardingPage = () => {
                             Recording Tips
                           </button>
                         </div>
-                        <div className="grid md:grid-cols-2 gap-4">
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Record Voice Sample
-                            </label>
-                            <div className="flex items-center space-x-2">
-                              <button
-                                type="button"
-                                onClick={isRecording ? stopRecording : startRecording}
-                                className={`px-4 py-2 rounded-lg font-medium flex items-center ${
-                                  isRecording
-                                    ? 'bg-red-500 text-white'
-                                    : 'bg-blue-500 text-white hover:bg-blue-600'
-                                }`}
-                              >
-                                <SafeIcon icon={isRecording ? FiX : FiMic} className="w-4 h-4 mr-2" />
-                                {isRecording ? 'Stop Recording' : 'Start Recording'}
-                              </button>
-                              {recordingBlob && (
-                                <audio controls className="max-w-xs">
-                                  <source src={URL.createObjectURL(recordingBlob)} type="audio/wav" />
-                                </audio>
-                              )}
+
+                        {/* Recording Interface */}
+                        <div className="bg-white rounded-lg p-6 border border-gray-200">
+                          {isRecording ? (
+                            <div className="text-center">
+                              <div className="bg-primary-50 p-4 rounded-lg mb-4">
+                                <h4 className="text-lg font-semibold text-primary-900 mb-4">
+                                  Please read the following text clearly:
+                                </h4>
+                                <p className="text-primary-700 leading-relaxed text-sm">
+                                  {voicePermissionText}
+                                </p>
+                              </div>
+                              <div className="flex items-center justify-center space-x-4">
+                                <div className="animate-pulse w-4 h-4 bg-red-500 rounded-full"></div>
+                                <span className="text-red-500 font-medium">
+                                  Recording: {recordingTime}s / 30s
+                                </span>
+                                <button
+                                  type="button"
+                                  onClick={stopRecording}
+                                  className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                                >
+                                  <SafeIcon icon={FiX} className="w-4 h-4 mr-2 inline" />
+                                  Stop Recording
+                                </button>
+                              </div>
                             </div>
-                            {isRecording && (
-                              <p className="text-xs text-red-600 mt-1">Recording... (max 30 seconds)</p>
-                            )}
-                          </div>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                              Or Upload Audio File
-                            </label>
-                            <input
-                              type="file"
-                              name="voiceFile"
-                              accept="audio/*"
-                              onChange={handleFileUpload}
-                              className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                            />
-                            <p className="text-xs text-gray-500 mt-1">
-                              Supported formats: MP3, WAV, M4A (max 30 seconds)
-                            </p>
-                          </div>
+                          ) : (
+                            <div className="grid md:grid-cols-2 gap-4">
+                              <div className="text-center">
+                                <button
+                                  type="button"
+                                  onClick={startRecording}
+                                  disabled={formData.voiceFile}
+                                  className="w-24 h-24 bg-primary-500 hover:bg-primary-600 disabled:bg-gray-300 rounded-full flex items-center justify-center mb-4 mx-auto transition-colors"
+                                >
+                                  <SafeIcon icon={FiMic} className="w-8 h-8 text-white" />
+                                </button>
+                                <p className="text-sm text-gray-600">
+                                  {formData.voiceFile ? 'Recording disabled (file uploaded)' : 'Click to start recording'}
+                                </p>
+                                {recordingBlob && (
+                                  <p className="text-sm text-green-600 mt-2">✓ Recording complete</p>
+                                )}
+                              </div>
+                              <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-2">
+                                  Or Upload Audio File
+                                </label>
+                                <input
+                                  type="file"
+                                  name="voiceFile"
+                                  accept="audio/*"
+                                  onChange={handleVoiceFileUpload}
+                                  disabled={recordingBlob}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm disabled:bg-gray-100"
+                                />
+                                <p className="text-xs text-gray-500 mt-1">
+                                  Supported formats: MP3, WAV, M4A (max 30 seconds)
+                                </p>
+                                {formData.voiceFile && (
+                                  <p className="text-sm text-green-600 mt-2">✓ File uploaded: {formData.voiceFile.name}</p>
+                                )}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
                     )}
@@ -910,7 +917,12 @@ const OnboardingPage = () => {
                     {loading ? 'Processing...' : (requiresUpgrade ? 'Upgrade to Process More Words' : (formData.plan === 'free' ? 'Create My Free Sample' : 'Create My Audiobook'))}
                   </button>
                   <p className="mt-3 text-sm text-gray-500">
-                    {requiresUpgrade ? 'Your text exceeds the free plan limit' : (formData.plan === 'free' ? 'Your free sample will be processed within 30 minutes' : 'Your audiobook project will be created and processing will begin immediately')}
+                    {requiresUpgrade
+                      ? 'Your text exceeds the free plan limit'
+                      : (formData.plan === 'free'
+                        ? 'Your free sample will be processed within 30 minutes'
+                        : 'Your audiobook project will be created and processing will begin immediately'
+                      )}
                   </p>
                 </div>
               </form>
@@ -931,7 +943,9 @@ const OnboardingPage = () => {
               Welcome to AudiobookSmith, {formData.name}!
             </h2>
             <p className="text-lg text-gray-600 mb-8">
-              {formData.plan === 'free' ? `Your free sample for "${formData.bookTitle}" has been created successfully.` : `Your audiobook project "${formData.bookTitle}" has been created successfully.`}
+              {formData.plan === 'free'
+                ? `Your free sample for "${formData.bookTitle}" has been created successfully.`
+                : `Your audiobook project "${formData.bookTitle}" has been created successfully.`}
             </p>
             <div className="bg-white rounded-2xl p-8 shadow-lg max-w-2xl mx-auto mb-8">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">What happens next?</h3>
@@ -955,7 +969,9 @@ const OnboardingPage = () => {
                   <div>
                     <p className="font-medium text-gray-900">Delivery</p>
                     <p className="text-sm text-gray-600">
-                      {formData.plan === 'free' ? 'Your free sample will be ready within 30 minutes' : 'Your completed audiobook will be ready for download within 24-48 hours'}
+                      {formData.plan === 'free'
+                        ? 'Your free sample will be ready within 30 minutes'
+                        : 'Your completed audiobook will be ready for download within 24-48 hours'}
                     </p>
                   </div>
                 </div>

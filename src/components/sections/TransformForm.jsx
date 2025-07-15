@@ -3,27 +3,9 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import * as FiIcons from 'react-icons/fi';
 import SafeIcon from '../../common/SafeIcon';
-import supabase from '../../lib/supabase';
+import database from '../../lib/database'; // Using custom database instead of supabase
 
-const {
-  FiSend,
-  FiCheck,
-  FiUser,
-  FiMail,
-  FiBook,
-  FiAlignLeft,
-  FiHelpCircle,
-  FiGift,
-  FiMic,
-  FiUpload,
-  FiPlay,
-  FiX,
-  FiInfo,
-  FiFileText,
-  FiType,
-  FiVolume2,
-  FiAlertTriangle
-} = FiIcons;
+const { FiSend, FiCheck, FiUser, FiMail, FiBook, FiAlignLeft, FiHelpCircle, FiGift, FiMic, FiUpload, FiPlay, FiX, FiInfo, FiFileText, FiType, FiVolume2, FiAlertTriangle } = FiIcons;
 
 const TransformForm = () => {
   // Form state
@@ -56,17 +38,20 @@ const TransformForm = () => {
   // Form validation
   const validateForm = () => {
     const errors = {};
+    
     if (!formData.name) errors.name = 'Name is required';
     if (!formData.email) errors.email = 'Email is required';
     if (!formData.email.includes('@')) errors.email = 'Valid email is required';
     if (!formData.bookTitle) errors.bookTitle = 'Book title is required';
+    
     if (formData.plan === 'free' && !formData.sampleText) {
       errors.sampleText = 'Sample text is required for free plan';
     }
+    
     if (formData.plan === 'free' && wordCount > maxWords) {
       errors.sampleText = `Text exceeds ${maxWords} words limit`;
     }
-    
+
     return Object.keys(errors).length === 0;
   };
 
@@ -84,39 +69,19 @@ const TransformForm = () => {
     setIsSubmitting(true);
 
     try {
-      // Create user in Supabase
-      const { data: authData, error: authError } = await supabase.auth.signUp({
+      // Insert user data into custom database
+      const { data, error: dbError } = await database.insert('users_audiobooksmith', {
         email: formData.email,
-        password: Math.random().toString(36).slice(-8), // Generate random password
-        options: {
-          data: {
-            name: formData.name,
-            plan: formData.plan
-          }
-        }
+        name: formData.name,
+        book_title: formData.bookTitle,
+        book_genre: formData.bookGenre,
+        word_count: formData.wordCount,
+        plan: formData.plan,
+        sample_text: formData.sampleText,
+        requirements: formData.requirements,
+        preferred_voice: formData.preferredVoice,
+        payment_status: formData.plan === 'free' ? 'free_tier' : 'pending'
       });
-
-      if (authError && authError.message !== 'User already registered') {
-        throw authError;
-      }
-
-      // Store form data in Supabase
-      const { error: dbError } = await supabase
-        .from('users_audiobooksmith')
-        .upsert([
-          {
-            email: formData.email,
-            name: formData.name,
-            book_title: formData.bookTitle,
-            book_genre: formData.bookGenre,
-            word_count: formData.wordCount,
-            plan: formData.plan,
-            sample_text: formData.sampleText,
-            requirements: formData.requirements,
-            preferred_voice: formData.preferredVoice,
-            payment_status: formData.plan === 'free' ? 'free_tier' : 'pending'
-          }
-        ], { onConflict: 'email' });
 
       if (dbError) {
         throw dbError;
@@ -152,17 +117,8 @@ const TransformForm = () => {
 
   // Form sections data
   const genres = [
-    'Fiction',
-    'Non-Fiction',
-    'Mystery/Thriller',
-    'Romance',
-    'Sci-Fi/Fantasy',
-    'Biography/Memoir',
-    'Self-Help',
-    'Business',
-    'Educational',
-    'Children\'s',
-    'Other'
+    'Fiction', 'Non-Fiction', 'Mystery/Thriller', 'Romance', 'Sci-Fi/Fantasy',
+    'Biography/Memoir', 'Self-Help', 'Business', 'Educational', 'Children\'s', 'Other'
   ];
 
   const wordCountOptions = [
@@ -202,7 +158,7 @@ const TransformForm = () => {
     return (
       <section className="py-20 bg-gradient-to-br from-primary-50 to-secondary-50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             className="bg-white rounded-2xl shadow-xl p-8 text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -211,11 +167,9 @@ const TransformForm = () => {
             <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <SafeIcon icon={FiCheck} className="w-10 h-10 text-green-500" />
             </div>
-            
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
               Thank You, {formData.name}!
             </h2>
-            
             <p className="text-xl text-gray-600 mb-8">
               {formData.plan === 'free' 
                 ? `Your free sample for "${formData.bookTitle}" will be ready in about 30 minutes.`
@@ -233,7 +187,6 @@ const TransformForm = () => {
                     <p className="text-gray-600">We've sent you confirmation details and next steps to {formData.email}</p>
                   </div>
                 </div>
-                
                 <div className="flex items-start space-x-3">
                   <div className="flex-shrink-0 w-6 h-6 bg-primary-500 text-white rounded-full flex items-center justify-center text-sm">2</div>
                   <div>
@@ -241,7 +194,6 @@ const TransformForm = () => {
                     <p className="text-gray-600">Our AI will start analyzing your {formData.plan === 'free' ? 'sample text' : 'manuscript'}</p>
                   </div>
                 </div>
-                
                 <div className="flex items-start space-x-3">
                   <div className="flex-shrink-0 w-6 h-6 bg-primary-500 text-white rounded-full flex items-center justify-center text-sm">3</div>
                   <div>
@@ -258,16 +210,15 @@ const TransformForm = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/dashboard"
+              <Link 
+                to="/dashboard" 
                 className="inline-flex items-center px-6 py-3 bg-primary-500 text-white font-semibold rounded-lg hover:bg-primary-600 transition-colors"
               >
                 <SafeIcon icon={FiUser} className="w-5 h-5 mr-2" />
                 Go to Dashboard
               </Link>
-              
-              <Link
-                to="/voice-samples"
+              <Link 
+                to="/voice-samples" 
                 className="inline-flex items-center px-6 py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors"
               >
                 <SafeIcon icon={FiVolume2} className="w-5 h-5 mr-2" />
@@ -284,7 +235,7 @@ const TransformForm = () => {
     <section id="transform-form" className="py-20 bg-gradient-to-br from-primary-50 to-secondary-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <motion.h2 
+          <motion.h2
             className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -296,8 +247,7 @@ const TransformForm = () => {
               Audiobook Journey
             </span>
           </motion.h2>
-          
-          <motion.p 
+          <motion.p
             className="text-xl text-gray-600 max-w-3xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -308,7 +258,7 @@ const TransformForm = () => {
           </motion.p>
         </div>
 
-        <motion.div 
+        <motion.div
           className="bg-white rounded-2xl shadow-xl p-8 md:p-12"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -336,7 +286,6 @@ const TransformForm = () => {
                 <SafeIcon icon={FiUser} className="w-5 h-5 mr-2 text-primary-500" />
                 About You
               </h3>
-              
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -353,7 +302,6 @@ const TransformForm = () => {
                     required
                   />
                 </div>
-                
                 <div>
                   <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                     Email Address *
@@ -378,7 +326,6 @@ const TransformForm = () => {
                 <SafeIcon icon={FiBook} className="w-5 h-5 mr-2 text-primary-500" />
                 Book Details
               </h3>
-              
               <div className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -396,7 +343,6 @@ const TransformForm = () => {
                       required
                     />
                   </div>
-                  
                   <div>
                     <label htmlFor="bookGenre" className="block text-sm font-medium text-gray-700 mb-2">
                       Genre
@@ -447,7 +393,6 @@ const TransformForm = () => {
                         </div>
                       </label>
                     </div>
-
                     <div className="relative">
                       <input
                         type="radio"
@@ -540,7 +485,6 @@ const TransformForm = () => {
                 <SafeIcon icon={FiMic} className="w-5 h-5 mr-2 text-primary-500" />
                 Voice Preferences
               </h3>
-              
               <div className="space-y-6">
                 <div>
                   <label htmlFor="preferredVoice" className="block text-sm font-medium text-gray-700 mb-2">
@@ -629,11 +573,10 @@ const TransformForm = () => {
                   </>
                 )}
               </button>
-              
               <p className="mt-3 text-sm text-gray-500 flex items-center justify-center">
                 <SafeIcon icon={FiHelpCircle} className="w-4 h-4 mr-1" />
-                {formData.plan === 'free'
-                  ? 'Your free sample will be ready in 30 minutes'
+                {formData.plan === 'free' 
+                  ? 'Your free sample will be ready in 30 minutes' 
                   : 'We\'ll respond within 24 hours with your custom plan'
                 }
               </p>
@@ -653,12 +596,10 @@ const TransformForm = () => {
             <SafeIcon icon={FiCheck} className="w-5 h-5 text-green-500" />
             <span>Free sample, no card required</span>
           </div>
-          
           <div className="flex items-center justify-center space-x-2 text-gray-600">
             <SafeIcon icon={FiCheck} className="w-5 h-5 text-green-500" />
             <span>Ready in 30 minutes</span>
           </div>
-          
           <div className="flex items-center justify-center space-x-2 text-gray-600">
             <SafeIcon icon={FiCheck} className="w-5 h-5 text-green-500" />
             <span>Upgrade anytime</span>

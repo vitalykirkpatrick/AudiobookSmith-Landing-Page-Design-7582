@@ -2,321 +2,217 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import * as FiIcons from 'react-icons/fi';
 import * as BsIcons from 'react-icons/bs';
-import * as AiIcons from 'react-icons/ai';
-import * as HiIcons from 'react-icons/hi';
-import * as MdIcons from 'react-icons/md';
 import SafeIcon from '../../common/SafeIcon';
 
-const { FiCpu, FiSliders, FiUsers, FiGlobe, FiShield } = FiIcons;
-const { BsSoundwave, BsSpeedometer, BsVolumeUp } = BsIcons;
-const { AiOutlineControl, AiOutlineRobot } = AiIcons;
-const { HiOutlineTranslate, HiOutlineSparkles } = HiIcons;
-const { MdOutlineSettingsVoice, MdOutlineTimeline } = MdIcons;
+const { FiCpu, FiSettings, FiShield, FiZap, FiGlobe, FiHeadphones } = FiIcons;
+const { BsSpeedometer, BsWaveform } = BsIcons;
 
 const TechFeatures = () => {
-  const technologies = [
+  // Core tech features
+  const coreFeatures = [
     {
-      title: "State-of-the-Art Voice AI",
-      description: "Our proprietary neural voice engine delivers human-like intonation, natural pauses, and emotional expression.",
-      icon: AiOutlineRobot,
-      color: "from-blue-500 to-indigo-500",
-      bgColor: "from-blue-50 to-indigo-50",
-      metrics: [
-        { label: "Voices Available", value: "85+" },
-        { label: "Languages", value: "12" },
-        { label: "Quality Rating", value: "4.9/5" }
-      ]
+      icon: FiCpu,
+      title: "Advanced AI Engine",
+      description: "Powered by state-of-the-art neural networks specifically optimized for human-like speech patterns and natural prosody."
     },
     {
-      title: "Voice Cloning Technology",
-      description: "Create a digital replica of your own voice with just a 30-second audio sample for a truly personalized audiobook.",
-      icon: MdOutlineSettingsVoice,
-      color: "from-purple-500 to-pink-500",
-      bgColor: "from-purple-50 to-pink-500/10",
-      metrics: [
-        { label: "Training Time", value: "2-4 hrs" },
-        { label: "Similarity", value: "97%" },
-        { label: "Sample Needed", value: "30 sec" }
-      ]
+      icon: BsWaveform,
+      title: "Natural Speech Synthesis",
+      description: "Our proprietary technology creates natural pauses, emphasis, and emotional inflection based on textual context."
     },
     {
-      title: "Adaptive Prosody Engine",
-      description: "Automatically adjusts pacing, emphasis, and tone based on content context for more engaging narration.",
-      icon: BsSoundwave,
-      color: "from-teal-500 to-emerald-500",
-      bgColor: "from-teal-50 to-emerald-50",
-      metrics: [
-        { label: "Dynamic Range", value: "High" },
-        { label: "Context Awareness", value: "Advanced" },
-        { label: "Emotional Tones", value: "18" }
-      ]
+      icon: FiSettings,
+      title: "Customization Controls",
+      description: "Fine-tune every aspect of your audiobook with intuitive controls for pacing, pronunciation, and voice characteristics."
+    },
+    {
+      icon: FiShield,
+      title: "Enterprise-Grade Security",
+      description: "Your manuscripts and audio files are protected with end-to-end encryption and secure cloud storage."
     }
   ];
 
-  const advancedFeatures = [
+  // Platform capabilities
+  const platformCapabilities = [
     {
-      title: "Multi-Character Dialogue Detection",
-      description: "Automatically identifies different characters and applies appropriate voices.",
-      icon: FiUsers,
-      color: "bg-gradient-to-r from-pink-500 to-red-500"
+      icon: FiZap,
+      title: "Cloud Processing",
+      description: "Leverage our powerful cloud infrastructure for fast processing without taxing your local system."
     },
     {
-      title: "Acoustic Environment Modeling",
-      description: "Apply acoustic environments like 'studio', 'intimate', or 'auditorium'.",
-      icon: BsVolumeUp,
-      color: "bg-gradient-to-r from-blue-500 to-cyan-500"
-    },
-    {
-      title: "Pronunciation Controls",
-      description: "Fine-tune how specific words, names, or technical terms are pronounced.",
-      icon: HiOutlineTranslate,
-      color: "bg-gradient-to-r from-amber-500 to-orange-500"
-    },
-    {
-      title: "Multi-Language Support",
-      description: "Support for 12 languages with regional accent variations.",
-      icon: FiGlobe,
-      color: "bg-gradient-to-r from-teal-500 to-emerald-500"
-    },
-    {
-      title: "Neural Audio Enhancement",
-      description: "AI-powered audio processing for studio-quality output.",
-      icon: HiOutlineSparkles,
-      color: "bg-gradient-to-r from-purple-500 to-indigo-500"
-    },
-    {
-      title: "Adaptive Pacing",
-      description: "Intelligently adjusts reading speed based on content context.",
       icon: BsSpeedometer,
-      color: "bg-gradient-to-r from-green-500 to-lime-500"
+      title: "High-Speed Generation",
+      description: "Generate hours of audio in minutes, not days. Our optimized pipeline delivers quality at unprecedented speed."
+    },
+    {
+      icon: FiGlobe,
+      title: "Multi-Platform Export",
+      description: "Export your audiobooks in formats compatible with all major distribution platforms including Audible and Apple Books."
+    },
+    {
+      icon: FiHeadphones,
+      title: "Adaptive Audio Quality",
+      description: "Choose from multiple quality settings to balance file size and audio fidelity based on your specific needs."
     }
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-br from-gray-50 to-indigo-50/30 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        {/* Background decorative elements */}
-        <div className="absolute top-10 left-10 w-72 h-72 bg-gradient-to-r from-primary-200/20 to-secondary-200/20 rounded-full filter blur-3xl opacity-70 -z-10"></div>
-        <div className="absolute bottom-10 right-10 w-80 h-80 bg-gradient-to-r from-secondary-200/20 to-primary-200/20 rounded-full filter blur-3xl opacity-70 -z-10"></div>
-        
-        <div className="text-center mb-16 relative z-10">
-          <motion.h2 
-            className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
+    <section className="py-20 bg-gradient-to-br from-gray-900 to-indigo-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <motion.h2
+            className="text-4xl md:text-5xl font-bold mb-6"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
           >
-            Cutting-Edge <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-500 to-secondary-500">Technology</span>
+            Powered by{' '}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-400 to-secondary-400">
+              Advanced Technology
+            </span>
           </motion.h2>
-          <motion.p 
-            className="text-xl text-gray-600 max-w-3xl mx-auto"
+          <motion.p
+            className="text-xl opacity-90 max-w-3xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            Powered by advanced AI to deliver human-quality audiobooks
+            Our state-of-the-art AI platform brings your words to life with human-like narration
           </motion.p>
         </div>
 
-        {/* Core Technologies */}
-        <div className="grid md:grid-cols-3 gap-8 mb-20">
-          {technologies.map((tech, index) => (
-            <motion.div 
+        {/* Core Features */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          {coreFeatures.map((feature, index) => (
+            <motion.div
               key={index}
-              className={`relative overflow-hidden rounded-2xl bg-gradient-to-br ${tech.bgColor} shadow-lg border border-white`}
+              className="relative p-6 bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8, delay: index * 0.2 }}
+              transition={{ duration: 0.8, delay: index * 0.1 }}
+              whileHover={{ y: -5 }}
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-r from-white/20 to-transparent rounded-full transform translate-x-1/4 -translate-y-1/4"></div>
-              <div className="p-8 relative z-10">
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-r ${tech.color} text-white mb-6 shadow-lg`}>
-                  <SafeIcon icon={tech.icon} className="w-8 h-8" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{tech.title}</h3>
-                <p className="text-gray-700 mb-6 leading-relaxed">{tech.description}</p>
-                
-                {/* Metrics */}
-                <div className="grid grid-cols-3 gap-3 mt-auto">
-                  {tech.metrics.map((metric, i) => (
-                    <div key={i} className="bg-white/50 backdrop-blur-sm p-3 rounded-lg text-center">
-                      <div className="text-lg font-bold text-gray-900">{metric.value}</div>
-                      <div className="text-xs text-gray-500">{metric.label}</div>
-                    </div>
-                  ))}
-                </div>
+              <div className="absolute top-0 right-0 w-24 h-24 -mt-10 -mr-10 opacity-10">
+                <SafeIcon icon={feature.icon} className="w-full h-full text-primary-400" />
               </div>
+              <div className="p-2 mb-4 w-14 h-14 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 flex items-center justify-center shadow-lg">
+                <SafeIcon icon={feature.icon} className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+              <p className="text-gray-300 leading-relaxed">{feature.description}</p>
             </motion.div>
           ))}
         </div>
-        
-        {/* Audio Processing Visualization */}
-        <motion.div 
-          className="mb-20 relative overflow-hidden bg-white rounded-2xl shadow-xl"
+
+        {/* Technology Visualization */}
+        <motion.div
+          className="relative bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden shadow-2xl mb-16 p-8"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          <div className="grid md:grid-cols-2 min-h-[400px]">
-            {/* Visual representation of audio processing */}
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-8 flex flex-col justify-center items-center relative overflow-hidden">
-              <div className="absolute inset-0 opacity-20">
-                <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                <div className="absolute top-1/3 right-1/3 w-1 h-1 bg-purple-400 rounded-full animate-ping"></div>
-                <div className="absolute bottom-1/4 left-1/3 w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
-              </div>
-              
-              <div className="relative z-10 text-center">
-                <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full mb-6">
-                  <SafeIcon icon={FiCpu} className="w-10 h-10 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-4">Neural Processing Pipeline</h3>
-                <p className="text-gray-300 mb-8 max-w-md">Our multi-stage AI processing transforms text into naturally flowing speech with emotional intelligence.</p>
-                
-                {/* Audio waveform visualization */}
-                <div className="h-16 w-full flex items-center justify-center space-x-1">
-                  {[...Array(40)].map((_, i) => (
-                    <div 
-                      key={i} 
-                      className="w-1 bg-gradient-to-t from-primary-400 to-secondary-400 rounded-full"
-                      style={{ 
-                        height: `${Math.sin(i * 0.5) * 50 + 50}%`,
-                        opacity: i % 2 === 0 ? 0.8 : 0.5,
-                        animationDuration: `${0.8 + (i * 0.05)}s`,
-                      }}
-                      className="animate-pulse"
-                    ></div>
-                  ))}
-                </div>
-              </div>
+          <div className="absolute inset-0 opacity-30 overflow-hidden">
+            {/* Technology Background Pattern */}
+            <div className="absolute inset-0 grid grid-cols-12 gap-2">
+              {[...Array(60)].map((_, i) => (
+                <div
+                  key={i}
+                  className="col-span-1 h-4 rounded-full bg-primary-500/20"
+                  style={{
+                    animationDelay: `${i * 0.1}s`,
+                    animationDuration: '3s',
+                    animationName: 'pulse',
+                    animationIterationCount: 'infinite',
+                    animationTimingFunction: 'ease-in-out'
+                  }}
+                />
+              ))}
             </div>
             
-            {/* Processing stages */}
-            <div className="p-8 flex flex-col justify-center">
-              <h3 className="text-2xl font-bold text-gray-900 mb-6">How Our AI Processes Your Text</h3>
-              
-              <div className="space-y-6">
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold">1</div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-1">Text Analysis</h4>
-                    <p className="text-gray-600">Analyzes grammar, context, and emotional tone of your content.</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold">2</div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-1">Voice Mapping</h4>
-                    <p className="text-gray-600">Selects appropriate voice characteristics based on content.</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold">3</div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-1">Prosody Generation</h4>
-                    <p className="text-gray-600">Creates natural intonation patterns with appropriate emphasis.</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold">4</div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-1">Neural Rendering</h4>
-                    <p className="text-gray-600">Generates ultra-realistic voice audio that's indistinguishable from human narration.</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start space-x-4">
-                  <div className="flex-shrink-0 w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center text-primary-600 font-bold">5</div>
-                  <div>
-                    <h4 className="font-bold text-gray-900 mb-1">Quality Enhancement</h4>
-                    <p className="text-gray-600">Applies acoustic optimization for professional studio-quality audio.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-        
-        {/* Advanced Features Grid */}
-        <div className="mb-16">
-          <motion.h3 
-            className="text-3xl font-bold text-center text-gray-900 mb-10"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.8 }}
-          >
-            Advanced Audio Features
-          </motion.h3>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {advancedFeatures.map((feature, index) => (
-              <motion.div 
-                key={index}
-                className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover:shadow-xl transition-all duration-300"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: 0.1 * index }}
-                whileHover={{ y: -5 }}
+            {/* Flowing Data Visualization */}
+            <div className="absolute top-1/2 left-0 right-0 h-12 overflow-hidden">
+              <div
+                className="h-full flex items-center"
+                style={{
+                  animation: 'waveFlow 15s linear infinite',
+                  width: '300%'
+                }}
               >
-                <div className={`w-12 h-12 ${feature.color} rounded-lg flex items-center justify-center text-white mb-4 shadow-md`}>
-                  <SafeIcon icon={feature.icon} className="w-6 h-6" />
-                </div>
-                <h4 className="text-lg font-bold text-gray-900 mb-2">{feature.title}</h4>
-                <p className="text-gray-600">{feature.description}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Privacy & Security Section - Updated for Cloud Platform */}
-        <motion.div 
-          className="bg-gradient-to-r from-gray-900 to-gray-800 rounded-2xl p-8 text-white relative overflow-hidden"
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          {/* Decorative elements */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-r from-primary-500/20 to-secondary-500/20 rounded-full filter blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-r from-secondary-500/20 to-primary-500/20 rounded-full filter blur-3xl"></div>
-          
-          <div className="relative z-10 flex flex-col md:flex-row items-center">
-            <div className="md:w-1/4 mb-6 md:mb-0 flex justify-center">
-              <div className="w-24 h-24 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center">
-                <SafeIcon icon={FiShield} className="w-12 h-12 text-white" />
+                {[...Array(40)].map((_, i) => (
+                  <div
+                    key={i}
+                    className="w-1 bg-gradient-to-t from-primary-400 to-secondary-400 rounded-full"
+                    style={{
+                      height: `${Math.sin(i * 0.5) * 50 + 50}%`,
+                      opacity: i % 2 === 0 ? 0.8 : 0.5,
+                      animationDuration: `${0.8 + (i * 0.05)}s`
+                    }}
+                  />
+                ))}
               </div>
             </div>
-            <div className="md:w-3/4 md:pl-8">
-              <h3 className="text-2xl font-bold mb-4">Enterprise-Grade Security & Privacy</h3>
+          </div>
+          
+          <div className="relative z-10 grid md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-2xl font-bold mb-4">Neural Voice Technology</h3>
               <p className="text-gray-300 mb-6 leading-relaxed">
-                Your manuscripts and voice data are protected with bank-level security. We use industry-standard encryption and secure cloud infrastructure to keep your intellectual property safe while enabling you to access and edit your projects anytime, anywhere.
+                Our AI system uses deep neural networks trained on thousands of hours of professional narration to understand the nuances of human speech. This allows us to generate voices that capture the emotional context of your text with natural intonation and pacing.
               </p>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <div className="bg-white/10 backdrop-blur-sm p-3 rounded-lg">
-                  <div className="text-lg font-bold">Secure Cloud Storage</div>
-                  <div className="text-sm text-gray-400">Access projects anywhere</div>
+              <div className="space-y-3">
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-primary-500 rounded-full"></div>
+                  <span className="text-gray-200">Advanced neural text analysis</span>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm p-3 rounded-lg">
-                  <div className="text-lg font-bold">End-to-End Encryption</div>
-                  <div className="text-sm text-gray-400">256-bit protection</div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-secondary-500 rounded-full"></div>
+                  <span className="text-gray-200">Emotional context mapping</span>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm p-3 rounded-lg">
-                  <div className="text-lg font-bold">GDPR Compliant</div>
-                  <div className="text-sm text-gray-400">Privacy by design</div>
+                <div className="flex items-center space-x-3">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-gray-200">Natural prosody generation</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center justify-center">
+              <div className="relative w-64 h-64">
+                <div className="absolute inset-0 rounded-full border-4 border-dashed border-primary-400/30 animate-spin-slow"></div>
+                <div className="absolute inset-8 rounded-full border-4 border-dashed border-secondary-400/40 animate-spin-slow" style={{ animationDirection: 'reverse', animationDuration: '30s' }}></div>
+                <div className="absolute inset-16 rounded-full border-4 border-dashed border-primary-400/50 animate-spin-slow" style={{ animationDuration: '20s' }}></div>
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="w-24 h-24 rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 shadow-lg flex items-center justify-center">
+                    <SafeIcon icon={BsWaveform} className="w-12 h-12 text-white" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </motion.div>
+
+        {/* Platform Capabilities */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {platformCapabilities.map((capability, index) => (
+            <motion.div
+              key={index}
+              className="p-6 bg-gradient-to-br from-gray-800/80 to-gray-900/80 backdrop-blur-sm rounded-xl border border-gray-700 hover:border-primary-500/50 transition-all duration-300"
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 + index * 0.1 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="p-2 mb-4 w-14 h-14 rounded-full bg-gray-800 flex items-center justify-center shadow-lg border border-gray-700">
+                <SafeIcon icon={capability.icon} className="w-7 h-7 text-primary-400" />
+              </div>
+              <h3 className="text-xl font-bold mb-3">{capability.title}</h3>
+              <p className="text-gray-300 leading-relaxed">{capability.description}</p>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

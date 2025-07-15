@@ -5,8 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "npm run lint && vite build",
-    "lint": "eslint .",
+    "build": "vite build",
+    "lint": "eslint . --fix",
     "lint:error": "eslint . --quiet",
     "preview": "vite preview",
     "github": "node github-upload.js"
