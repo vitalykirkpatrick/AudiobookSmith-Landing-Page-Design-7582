@@ -1,14 +1,10 @@
-```jsx
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import * as FiIcons from 'react-icons/fi';
 import SafeIcon from '../common/SafeIcon';
 import database from '../lib/database';
 
-const { 
-  FiUsers, FiDollarSign, FiBook, FiSettings, FiMail, 
-  FiDownload, FiEdit, FiTrash2, FiCheck, FiX 
-} = FiIcons;
+const { FiUsers, FiDollarSign, FiBook, FiSettings, FiMail, FiDownload, FiEdit, FiTrash2, FiCheck, FiX } = FiIcons;
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('users');
@@ -27,30 +23,22 @@ const AdminDashboard = () => {
     try {
       switch (activeTab) {
         case 'users':
-          const { data: userData } = await database.from('users_audiobooksmith_2024')
-            .select(`
-              *,
-              profiles:user_profiles_audiobooksmith_2024(*)
-            `);
-          setUsers(userData);
+          const { data: userData } = await database.select('users_audiobooksmith_2024', {
+            select: '*'
+          });
+          setUsers(userData || []);
           break;
-
         case 'projects':
-          const { data: projectData } = await database.from('book_projects_audiobooksmith_2024')
-            .select(`
-              *,
-              user:users_audiobooksmith_2024(name, email)
-            `);
-          setProjects(projectData);
+          const { data: projectData } = await database.select('book_projects_audiobooksmith_2024', {
+            select: '*'
+          });
+          setProjects(projectData || []);
           break;
-
         case 'subscriptions':
-          const { data: subData } = await database.from('subscriptions_audiobooksmith_2024')
-            .select(`
-              *,
-              user:users_audiobooksmith_2024(name, email)
-            `);
-          setSubscriptions(subData);
+          const { data: subData } = await database.select('subscriptions_audiobooksmith_2024', {
+            select: '*'
+          });
+          setSubscriptions(subData || []);
           break;
       }
     } catch (error) {
@@ -63,10 +51,9 @@ const AdminDashboard = () => {
 
   const handleUserStatusUpdate = async (userId, newStatus) => {
     try {
-      await database.from('users_audiobooksmith_2024')
-        .update({ status: newStatus })
-        .eq('id', userId);
-      
+      await database.update('users_audiobooksmith_2024', userId, {
+        status: newStatus
+      });
       loadData();
     } catch (error) {
       console.error('Error updating user status:', error);
@@ -75,10 +62,9 @@ const AdminDashboard = () => {
 
   const handleSubscriptionUpdate = async (subId, newStatus) => {
     try {
-      await database.from('subscriptions_audiobooksmith_2024')
-        .update({ status: newStatus })
-        .eq('id', subId);
-      
+      await database.update('subscriptions_audiobooksmith_2024', subId, {
+        status: newStatus
+      });
       loadData();
     } catch (error) {
       console.error('Error updating subscription:', error);
@@ -86,9 +72,8 @@ const AdminDashboard = () => {
   };
 
   const handleExportData = (data, filename) => {
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + data.map(row => Object.values(row).join(",")).join("\n");
-    
+    const csvContent = "data:text/csv;charset=utf-8," + 
+      data.map(row => Object.values(row).join(",")).join("\n");
     const link = document.createElement("a");
     link.setAttribute("href", encodeURI(csvContent));
     link.setAttribute("download", `${filename}_${new Date().toISOString()}.csv`);
@@ -116,8 +101,9 @@ const AdminDashboard = () => {
               <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <span className={`px-2 py-1 rounded-full text-xs ${
-                  user.status === 'active' ? 'bg-green-100 text-green-800' : 
-                  'bg-red-100 text-red-800'
+                  user.status === 'active' 
+                    ? 'bg-green-100 text-green-800' 
+                    : 'bg-red-100 text-red-800'
                 }`}>
                   {user.status}
                 </span>
@@ -127,14 +113,10 @@ const AdminDashboard = () => {
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-right">
                 <button
-                  onClick={() => handleUserStatusUpdate(user.id, 
-                    user.status === 'active' ? 'inactive' : 'active')}
+                  onClick={() => handleUserStatusUpdate(user.id, user.status === 'active' ? 'inactive' : 'active')}
                   className="text-primary-600 hover:text-primary-900"
                 >
-                  <SafeIcon 
-                    icon={user.status === 'active' ? FiX : FiCheck} 
-                    className="w-5 h-5"
-                  />
+                  <SafeIcon icon={user.status === 'active' ? FiX : FiCheck} className="w-5 h-5" />
                 </button>
               </td>
             </tr>
@@ -164,9 +146,11 @@ const AdminDashboard = () => {
               <td className="px-6 py-4">{project.genre}</td>
               <td className="px-6 py-4">
                 <span className={`px-2 py-1 rounded-full text-xs ${
-                  project.status === 'completed' ? 'bg-green-100 text-green-800' :
-                  project.status === 'in_progress' ? 'bg-blue-100 text-blue-800' :
-                  'bg-gray-100 text-gray-800'
+                  project.status === 'completed' 
+                    ? 'bg-green-100 text-green-800' 
+                    : project.status === 'in_progress' 
+                      ? 'bg-blue-100 text-blue-800' 
+                      : 'bg-gray-100 text-gray-800'
                 }`}>
                   {project.status}
                 </span>
@@ -205,23 +189,21 @@ const AdminDashboard = () => {
               </td>
               <td className="px-6 py-4">
                 <span className={`px-2 py-1 rounded-full text-xs ${
-                  sub.status === 'active' ? 'bg-green-100 text-green-800' :
-                  sub.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                  'bg-gray-100 text-gray-800'
+                  sub.status === 'active' 
+                    ? 'bg-green-100 text-green-800' 
+                    : sub.status === 'cancelled' 
+                      ? 'bg-red-100 text-red-800' 
+                      : 'bg-gray-100 text-gray-800'
                 }`}>
                   {sub.status}
                 </span>
               </td>
               <td className="px-6 py-4 text-right">
-                <button 
-                  onClick={() => handleSubscriptionUpdate(sub.id,
-                    sub.status === 'active' ? 'cancelled' : 'active')}
+                <button
+                  onClick={() => handleSubscriptionUpdate(sub.id, sub.status === 'active' ? 'cancelled' : 'active')}
                   className="text-primary-600 hover:text-primary-900"
                 >
-                  <SafeIcon 
-                    icon={sub.status === 'active' ? FiX : FiCheck} 
-                    className="w-5 h-5"
-                  />
+                  <SafeIcon icon={sub.status === 'active' ? FiX : FiCheck} className="w-5 h-5" />
                 </button>
               </td>
             </tr>
@@ -239,9 +221,7 @@ const AdminDashboard = () => {
           <div className="flex items-center space-x-4">
             <button
               onClick={() => handleExportData(
-                activeTab === 'users' ? users :
-                activeTab === 'projects' ? projects :
-                subscriptions,
+                activeTab === 'users' ? users : activeTab === 'projects' ? projects : subscriptions,
                 activeTab
               )}
               className="flex items-center px-4 py-2 bg-white rounded-lg shadow hover:bg-gray-50"
@@ -258,8 +238,8 @@ const AdminDashboard = () => {
             <button
               onClick={() => setActiveTab('users')}
               className={`flex items-center px-4 py-2 rounded-lg ${
-                activeTab === 'users' 
-                  ? 'bg-primary-100 text-primary-700' 
+                activeTab === 'users'
+                  ? 'bg-primary-100 text-primary-700'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -269,8 +249,8 @@ const AdminDashboard = () => {
             <button
               onClick={() => setActiveTab('projects')}
               className={`flex items-center px-4 py-2 rounded-lg ${
-                activeTab === 'projects' 
-                  ? 'bg-primary-100 text-primary-700' 
+                activeTab === 'projects'
+                  ? 'bg-primary-100 text-primary-700'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -280,8 +260,8 @@ const AdminDashboard = () => {
             <button
               onClick={() => setActiveTab('subscriptions')}
               className={`flex items-center px-4 py-2 rounded-lg ${
-                activeTab === 'subscriptions' 
-                  ? 'bg-primary-100 text-primary-700' 
+                activeTab === 'subscriptions'
+                  ? 'bg-primary-100 text-primary-700'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -316,4 +296,3 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-```

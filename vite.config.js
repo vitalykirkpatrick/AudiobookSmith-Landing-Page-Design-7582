@@ -12,6 +12,18 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom', 'react-router-dom', 'framer-motion'],
+          icons: ['react-icons']
+        }
+      }
+    }
+  },
+  server: {
+    host: true,
+    port: 3000
   }
 });
