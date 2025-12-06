@@ -2,6 +2,8 @@ import { COOKIE_NAME } from "@shared/const";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
+import { z } from "zod";
+import { getAllVoices, filterVoices, getCategories, getStatistics, getVoiceById } from "./voiceService";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -17,12 +19,53 @@ export const appRouter = router({
     }),
   }),
 
-  // TODO: add feature routers here, e.g.
-  // todo: router({
-  //   list: protectedProcedure.query(({ ctx }) =>
-  //     db.getUserTodos(ctx.user.id)
-  //   ),
-  // }),
+  voices: router({
+    list: publicProcedure.query(() => {
+      const voices = getAllVoices();
+      return {
+        success: true,
+        voices,
+        total: voices.length
+      };
+    }),
+    filter: publicProcedure
+      .input(z.object({
+        gender: z.string().optional(),
+        category: z.string().optional()
+      }))
+      .query(({ input }) => {
+        const voices = filterVoices(input.gender, input.category);
+        return {
+          success: true,
+          voices,
+          total: voices.length
+        };
+      }),
+    categories: publicProcedure.query(() => {
+      return {
+        success: true,
+        categories: getCategories()
+      };
+    }),
+    statistics: publicProcedure.query(() => {
+      return {
+        success: true,
+        stats: getStatistics()
+      };
+    }),
+    byId: publicProcedure
+      .input(z.string())
+      .query(({ input }) => {
+        const voice = getVoiceById(input);
+        if (!voice) {
+          throw new Error('Voice not found');
+        }
+        return {
+          success: true,
+          voice
+        };
+      })
+  }),
 });
 
 export type AppRouter = typeof appRouter;
