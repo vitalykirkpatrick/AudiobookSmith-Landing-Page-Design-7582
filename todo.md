@@ -71,3 +71,46 @@
 - [ ] Add language filter dropdown
 - [ ] Verify Lady Blackthorne and other multi-language voices play in correct language
 - [x] Add use case categories for each voice (Fiction, Crime, Adventure, Romance, etc.)
+
+## New Requirements - Header and Integration
+
+### Header Updates
+- [x] Add AudiobookSmith logo to header
+- [x] Add "Back to Home" navigation link
+- [x] Update statistics to match original:
+  - [x] 1,300+ Unique AI Voices
+  - [x] 70+ Languages
+  - [x] 100+ Accents & Variants
+  - [x] 24 Curated Premium Voices
+- [x] Add feature boxes:
+  - [x] Native-Quality Narration (Advanced AI with natural intonation)
+  - [x] One-Click Language Switching (Create international editions easily)
+- [x] Add filter dropdowns:
+  - [x] All Languages filter
+  - [x] All Accents filter
+
+### CTAs After Voices
+- [x] Add "Want to Use Your Own Voice?" CTA section
+  - [x] Voice cloning description
+  - [x] "Try Voice Cloning Now" button
+  - [x] Feature bullets (Free demo, No credit card, Enterprise plans)
+- [x] Add "Ready to Create Your Audiobook?" CTA section
+  - [x] Audiobook creation description
+  - [x] "Start Your Audiobook Project" button
+  - [x] Feature bullets (Free sample, No credit card, 30-day guarantee)
+
+### Homepage Integration
+- [x] Download AudiobookSmith GitHub repo
+- [x] Analyze existing homepage structure
+- [x] Integrate voice samples page with homepage
+- [x] Ensure navigation works between pages
+- [x] Test complete site flow
+- [x] All 15 unit tests passing (14 voice tests + 1 auth test)
+- [x] Navigation working between homepage and voice samples
+- [x] All CTAs displaying correctly
+- [x] Footer matching original design
+
+### ElevenLabs Language Research
+- [x] Research ElevenLabs supported languages (74 languages with Eleven v3)
+- [x] Update language data in voice service
+- [x] Implement language filter functionality
