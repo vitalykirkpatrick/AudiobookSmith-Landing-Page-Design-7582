@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Loader2, Play, Pause } from 'lucide-react';
+import { Loader2, Play, Pause, Globe } from 'lucide-react';
 
 interface Voice {
   id: string;
@@ -12,10 +12,12 @@ interface Voice {
   age: string;
   accent: string;
   language: string;
+  languageCode?: string;
   preview_url: string;
   description: string;
   avatar?: string;
   traits?: string[];
+  useCaseTags?: string[];
 }
 
 export default function VoiceSamples() {
@@ -105,8 +107,17 @@ export default function VoiceSamples() {
         </div>
       </div>
 
-      {/* Filters Section */}
-      <div className="container py-8">
+      {/* Choose Your Perfect Voice Section */}
+      <div className="container py-12">
+        <div className="text-center max-w-4xl mx-auto mb-12">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">Choose Your Perfect Voice</h2>
+          <p className="text-lg text-gray-600">
+            Listen to our diverse collection of AI voices, each with unique characteristics and personalities. 
+            From warm and conversational to authoritative and professional, find the perfect voice to bring your audiobook to life.
+          </p>
+        </div>
+
+        {/* Filters Section */}
         <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between mb-8">
           <div className="flex flex-col md:flex-row gap-4 flex-1">
             <div className="w-full md:w-48">
@@ -156,40 +167,65 @@ export default function VoiceSamples() {
             {voices.map((voice: Voice) => (
               <div key={voice.id} className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
                 {/* Card Header with Gradient */}
-                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white">
-                  <div className="flex items-center gap-4">
-                    {voice.avatar && (
-                      <img 
-                        src={voice.avatar} 
-                        alt={voice.character}
-                        className="w-16 h-16 rounded-full border-4 border-white/30"
-                      />
-                    )}
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold">{voice.character}</h3>
-                      <p className="text-indigo-100 text-sm">
-                        {voice.category.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
-                      </p>
+                <div className="bg-gradient-to-r from-indigo-500 to-purple-600 p-6 text-white relative">
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="flex items-center gap-4 flex-1">
+                      {voice.avatar && (
+                        <img 
+                          src={voice.avatar} 
+                          alt={voice.character}
+                          className="w-16 h-16 rounded-full border-4 border-white/30"
+                        />
+                      )}
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold">{voice.character}</h3>
+                        <p className="text-indigo-100 text-sm">
+                          {voice.gender} • {voice.age}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end gap-2">
+                      <div className="flex items-center gap-1 text-xs bg-white/20 px-2 py-1 rounded-full">
+                        <Globe className="w-3 h-3" />
+                        <span>{voice.languageCode || 'English (US)'}</span>
+                      </div>
+                      <div className="text-xs bg-white/20 px-2 py-1 rounded-full">
+                        Premium
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 {/* Card Body */}
                 <div className="p-6">
-                  <div className="space-y-3 mb-4">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Gender:</span>
-                      <span className="font-medium text-gray-900">{voice.gender}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Age:</span>
-                      <span className="font-medium text-gray-900">{voice.age}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Accent:</span>
-                      <span className="font-medium text-gray-900">{voice.accent}</span>
-                    </div>
+                  {/* Category and Accent */}
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    <span className="px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-sm font-medium">
+                      {voice.category.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}
+                    </span>
+                    <span className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm">
+                      {voice.accent}
+                    </span>
                   </div>
+
+                  {/* Description */}
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                    {voice.description}
+                  </p>
+
+                  {/* Use Case Tags */}
+                  {voice.useCaseTags && voice.useCaseTags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {voice.useCaseTags.map((tag, idx) => (
+                        <span 
+                          key={idx}
+                          className="px-2 py-1 bg-purple-50 text-purple-700 rounded text-xs font-medium"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
                   {/* Traits */}
                   {voice.traits && voice.traits.length > 0 && (
@@ -197,7 +233,7 @@ export default function VoiceSamples() {
                       {voice.traits.map((trait, idx) => (
                         <span 
                           key={idx}
-                          className="px-3 py-1 bg-indigo-50 text-indigo-700 rounded-full text-xs font-medium"
+                          className="px-2 py-1 bg-blue-50 text-blue-700 rounded text-xs"
                         >
                           {trait}
                         </span>
@@ -205,26 +241,45 @@ export default function VoiceSamples() {
                     </div>
                   )}
 
-                  {/* Play Button */}
+                  {/* Play Button with Wave Animation */}
                   <Button
                     onClick={() => handlePlayPause(voice)}
-                    className={`w-full ${
+                    className={`w-full relative overflow-hidden ${
                       playingVoiceId === voice.id
                         ? 'bg-red-500 hover:bg-red-600'
                         : 'bg-indigo-600 hover:bg-indigo-700'
                     }`}
                   >
-                    {playingVoiceId === voice.id ? (
-                      <>
-                        <Pause className="w-4 h-4 mr-2" />
-                        Pause
-                      </>
-                    ) : (
-                      <>
-                        <Play className="w-4 h-4 mr-2" />
-                        Play Sample
-                      </>
+                    {playingVoiceId === voice.id && (
+                      <span className="absolute inset-0 flex items-center justify-center">
+                        <span className="flex gap-1">
+                          {[...Array(5)].map((_, i) => (
+                            <span
+                              key={i}
+                              className="w-1 bg-white rounded-full animate-pulse"
+                              style={{
+                                height: '16px',
+                                animationDelay: `${i * 0.1}s`,
+                                animationDuration: '0.6s'
+                              }}
+                            />
+                          ))}
+                        </span>
+                      </span>
                     )}
+                    <span className={playingVoiceId === voice.id ? 'opacity-0' : ''}>
+                      {playingVoiceId === voice.id ? (
+                        <>
+                          <Pause className="w-4 h-4 mr-2 inline" />
+                          Pause
+                        </>
+                      ) : (
+                        <>
+                          <Play className="w-4 h-4 mr-2 inline" />
+                          Play Sample
+                        </>
+                      )}
+                    </span>
                   </Button>
                 </div>
               </div>

@@ -16,6 +16,8 @@ export interface Voice {
   use_case: string;
   avatar?: string;
   traits?: string[];
+  useCaseTags?: string[];
+  languageCode?: string;
 }
 
 // Avatar URLs (human faces from Unsplash)
@@ -57,6 +59,47 @@ function getAvatarUrl(gender: string, index: number): string {
   }
   return AVATAR_URLS.neutral[0];
 }
+
+// Map categories to use case tags (Fiction, Adventure, Crime, etc.)
+const USE_CASE_TAGS_MAP: Record<string, string[]> = {
+  'adventurer': ['Adventure', 'Action', 'Epic Fantasy'],
+  'audiobook-narrator': ['Audiobook', 'Narration', 'Professional'],
+  'booming': ['Epic Fantasy', 'Military', 'Heroic'],
+  'dark': ['Fiction', 'Mystery', 'Dramatic'],
+  'documentary-narrator': ['Non-Fiction', 'Documentary', 'Educational'],
+  'dramatic': ['Dramatic', 'Fiction', 'Narration'],
+  'emotional': ['Romance', 'Fiction', 'Emotional'],
+  'expressive': ['Fiction', 'Audiobook', 'Versatile'],
+  'fantasy': ['Fantasy', 'Epic Fantasy', 'Fiction'],
+  'father': ['Fiction', 'Audiobook', 'Calm'],
+  'gentle': ['Meditation', 'Calm', 'Soothing'],
+  'grandfather': ['Fiction', 'Audiobook', 'Narration'],
+  'grandmother': ['Fiction', 'Audiobook', 'Narration'],
+  'gravelly': ['Action', 'Crime', 'Thriller'],
+  'horror': ['Horror', 'Thriller', 'Suspense'],
+  'intense': ['Thriller', 'Crime', 'Action'],
+  'mature': ['Fiction', 'Audiobook', 'Professional'],
+  'measured': ['Non-Fiction', 'Professional', 'Audiobook'],
+  'mentor': ['Fiction', 'Fantasy', 'Audiobook'],
+  'monotone': ['Non-Fiction', 'Technical', 'Professional'],
+  'mother': ['Fiction', 'Audiobook', 'Narration'],
+  'mysterious': ['Mystery', 'Thriller', 'Fiction'],
+  'mystery': ['Mystery', 'Crime', 'Thriller'],
+  'narrator': ['Audiobook', 'Narration', 'Fiction'],
+  'poem': ['Poetry', 'Fiction', 'Audiobook'],
+  'poetic': ['Poetry', 'Fiction', 'Romance'],
+  'preacher': ['Audiobook', 'Narration', 'Fiction'],
+  'priest': ['Audiobook', 'Narration', 'Fiction'],
+  'professional-narrator': ['Audiobook', 'Professional', 'Narration'],
+  'resonant': ['Audiobook', 'Professional', 'Narration'],
+  'romantic': ['Romance', 'Fiction', 'Dramatic'],
+  'soothing': ['Meditation', 'Calm', 'Audiobook'],
+  'storyteller': ['Fiction', 'Audiobook', 'Narration'],
+  'suspense': ['Suspense', 'Thriller', 'Mystery'],
+  'terror': ['Horror', 'Thriller', 'Suspense'],
+  'velvety': ['Audiobook', 'Smooth', 'Professional'],
+  'warm': ['Fiction', 'Audiobook', 'Calm']
+};
 
 const TRAITS_MAP: Record<string, string[]> = {
   'adventurer': ['Bold', 'Daring', 'Confident'],
@@ -101,12 +144,47 @@ function getTraits(category: string): string[] {
   return TRAITS_MAP[category] || ['Versatile', 'Professional', 'Engaging'];
 }
 
-// Process voices and add avatars and traits
-export const VOICES: Voice[] = (voicesData as Voice[]).map((voice, index) => ({
-  ...voice,
-  avatar: getAvatarUrl(voice.gender, index),
-  traits: getTraits(voice.category)
-}));
+function getUseCaseTags(category: string): string[] {
+  return USE_CASE_TAGS_MAP[category] || ['Audiobook', 'Narration', 'Fiction'];
+}
+
+function getLanguageCode(language: string): string {
+  // Map language to display format
+  const languageMap: Record<string, string> = {
+    'en-US': 'English (US)',
+    'en-GB': 'English (UK)',
+    'en': 'English (US)'
+  };
+  return languageMap[language] || 'English (US)';
+}
+
+// Process voices and add avatars, traits, use case tags, and language codes
+let maleIndex = 0;
+let femaleIndex = 0;
+
+export const VOICES: Voice[] = (voicesData as Voice[]).map((voice) => {
+  // Ensure avatar matches gender
+  const genderLower = voice.gender.toLowerCase();
+  let avatar: string;
+  
+  if (genderLower === 'male') {
+    avatar = AVATAR_URLS.male[maleIndex % AVATAR_URLS.male.length];
+    maleIndex++;
+  } else if (genderLower === 'female') {
+    avatar = AVATAR_URLS.female[femaleIndex % AVATAR_URLS.female.length];
+    femaleIndex++;
+  } else {
+    avatar = AVATAR_URLS.neutral[0];
+  }
+  
+  return {
+    ...voice,
+    avatar,
+    traits: getTraits(voice.category),
+    useCaseTags: getUseCaseTags(voice.category),
+    languageCode: getLanguageCode(voice.language)
+  };
+});
 
 export function getAllVoices(): Voice[] {
   return VOICES;
