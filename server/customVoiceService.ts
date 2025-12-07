@@ -1,9 +1,13 @@
 /**
- * Custom Voice Sample Generation Service
+ * Custom Voice Sample Generation Service with S3 Caching
  * 
  * This service generates custom audio samples using ElevenLabs Text-to-Speech API
  * for Fiction, Historical, and General narrative categories.
+ * 
+ * Audio files are cached in S3 storage to avoid repeated API calls and reduce costs.
  */
+
+import { storagePut, storageGet } from './storage';
 
 const ELEVENLABS_API_KEY = 'sk_ea6ecc9b4f9510cc4a0e8b109408e65272152c7e918bca24';
 const ELEVENLABS_TTS_URL = 'https://api.elevenlabs.io/v1/text-to-speech';
@@ -70,53 +74,148 @@ const CUSTOM_VOICE_CONFIGS: CustomVoiceSample[] = [
 ];
 
 /**
- * Generate audio for a custom voice sample using ElevenLabs TTS API
+ * Generate S3 storage key for a voice sample
  */
-export async function generateCustomVoiceSample(
-  voiceId: string,
-  text: string
-): Promise<string> {
+function getStorageKey(sampleId: string): string {
+  return `custom-voice-samples/${sampleId}.mp3`;
+}
+
+/**
+ * Check if audio file exists in S3 storage and return URL if accessible
+ */
+async function checkAudioExists(sampleId: string): Promise<string | null> {
   try {
-    const response = await fetch(`${ELEVENLABS_TTS_URL}/${voiceId}`, {
-      method: 'POST',
-      headers: {
-        'Accept': 'audio/mpeg',
-        'Content-Type': 'application/json',
-        'xi-api-key': ELEVENLABS_API_KEY,
-      },
-      body: JSON.stringify({
-        text,
-        model_id: 'eleven_monolingual_v1',
-        voice_settings: {
-          stability: 0.5,
-          similarity_boost: 0.75,
-          style: 0.5,
-          use_speaker_boost: true,
-        },
-      }),
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`ElevenLabs API error: ${response.status} - ${errorText}`);
+    const storageKey = getStorageKey(sampleId);
+    console.log(`[CustomVoice] Checking cache for ${sampleId} at ${storageKey}`);
+    
+    const { url } = await storageGet(storageKey);
+    
+    // Verify the URL is accessible with a HEAD request
+    const response = await fetch(url, { method: 'HEAD' });
+    if (response.ok) {
+      console.log(`[CustomVoice] ✓ Cache HIT for ${sampleId} - using cached audio`);
+      return url;
     }
-
-    // Convert audio blob to base64 data URL
-    const audioBlob = await response.blob();
-    const arrayBuffer = await audioBlob.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const base64Audio = buffer.toString('base64');
-    const dataUrl = `data:audio/mpeg;base64,${base64Audio}`;
-
-    return dataUrl;
+    
+    console.log(`[CustomVoice] Cache MISS for ${sampleId} - URL not accessible`);
+    return null;
   } catch (error) {
-    console.error('Error generating custom voice sample:', error);
-    throw error;
+    console.log(`[CustomVoice] Cache MISS for ${sampleId} - file not found`);
+    return null;
   }
 }
 
 /**
- * Get all custom voice sample configurations
+ * Generate audio using ElevenLabs TTS API
+ */
+async function generateAudioFromElevenLabs(
+  voiceId: string,
+  text: string
+): Promise<Buffer> {
+  console.log(`[CustomVoice] Calling ElevenLabs API for voice ${voiceId}`);
+  
+  const response = await fetch(`${ELEVENLABS_TTS_URL}/${voiceId}`, {
+    method: 'POST',
+    headers: {
+      'Accept': 'audio/mpeg',
+      'Content-Type': 'application/json',
+      'xi-api-key': ELEVENLABS_API_KEY,
+    },
+    body: JSON.stringify({
+      text,
+      model_id: 'eleven_monolingual_v1',
+      voice_settings: {
+        stability: 0.5,
+        similarity_boost: 0.75,
+        style: 0.5,
+        use_speaker_boost: true,
+      },
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`ElevenLabs API error: ${response.status} - ${errorText}`);
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  
+  console.log(`[CustomVoice] ✓ Generated ${buffer.length} bytes of audio from ElevenLabs`);
+  return buffer;
+}
+
+/**
+ * Upload audio to S3 storage and return permanent public URL
+ */
+async function uploadAudioToS3(
+  sampleId: string,
+  audioBuffer: Buffer
+): Promise<string> {
+  const storageKey = getStorageKey(sampleId);
+  console.log(`[CustomVoice] Uploading ${audioBuffer.length} bytes to S3 at ${storageKey}`);
+  
+  const { url } = await storagePut(storageKey, audioBuffer, 'audio/mpeg');
+  
+  console.log(`[CustomVoice] ✓ Cached audio for ${sampleId} at ${url}`);
+  return url;
+}
+
+/**
+ * Generate or retrieve cached audio for a single voice sample
+ * This implements the check-then-generate caching pattern
+ */
+async function getOrGenerateAudio(sample: CustomVoiceSample): Promise<string> {
+  // Step 1: Check if audio already exists in S3 cache
+  const cachedUrl = await checkAudioExists(sample.id);
+  if (cachedUrl) {
+    return cachedUrl;
+  }
+
+  // Step 2: Cache miss - generate new audio from ElevenLabs
+  console.log(`[CustomVoice] Generating NEW audio for ${sample.id}`);
+  const audioBuffer = await generateAudioFromElevenLabs(
+    sample.voiceId,
+    sample.sampleText
+  );
+
+  // Step 3: Upload to S3 and return permanent URL
+  const audioUrl = await uploadAudioToS3(sample.id, audioBuffer);
+  
+  return audioUrl;
+}
+
+/**
+ * Get all custom voice samples with cached or generated audio URLs
+ * This is the main function called by the tRPC router
+ */
+export async function getAllCustomSamplesWithAudio(): Promise<CustomVoiceSample[]> {
+  console.log('[CustomVoice] Fetching all custom samples with audio...');
+  
+  // Process samples sequentially to avoid rate limits
+  const samplesWithAudio: CustomVoiceSample[] = [];
+  
+  for (const sample of CUSTOM_VOICE_CONFIGS) {
+    try {
+      const audioUrl = await getOrGenerateAudio(sample);
+      samplesWithAudio.push({
+        ...sample,
+        audioUrl,
+      });
+    } catch (error) {
+      console.error(`[CustomVoice] ✗ Error processing audio for ${sample.id}:`, error);
+      // Return sample without audio URL if processing fails
+      samplesWithAudio.push(sample);
+    }
+  }
+  
+  console.log(`[CustomVoice] ✓ Completed processing ${samplesWithAudio.length} samples`);
+  return samplesWithAudio;
+}
+
+/**
+ * Get custom voice sample configurations without audio URLs
+ * This is a fast endpoint that doesn't require API calls or S3 access
  */
 export function getCustomVoiceSamples(): CustomVoiceSample[] {
   return CUSTOM_VOICE_CONFIGS;
@@ -130,24 +229,22 @@ export function getCustomVoiceSampleById(id: string): CustomVoiceSample | undefi
 }
 
 /**
- * Generate audio for all custom voice samples
- * This is called when the frontend requests the custom samples
+ * Legacy function - kept for backward compatibility
+ * @deprecated Use getAllCustomSamplesWithAudio instead
  */
 export async function generateAllCustomSamples(): Promise<CustomVoiceSample[]> {
-  const samplesWithAudio = await Promise.all(
-    CUSTOM_VOICE_CONFIGS.map(async (sample) => {
-      try {
-        const audioUrl = await generateCustomVoiceSample(sample.voiceId, sample.sampleText);
-        return {
-          ...sample,
-          audioUrl,
-        };
-      } catch (error) {
-        console.error(`Error generating audio for ${sample.id}:`, error);
-        return sample; // Return without audio URL if generation fails
-      }
-    })
-  );
+  return getAllCustomSamplesWithAudio();
+}
 
-  return samplesWithAudio;
+/**
+ * Legacy function - kept for backward compatibility
+ * @deprecated Audio generation is now handled internally with caching
+ */
+export async function generateCustomVoiceSample(
+  voiceId: string,
+  text: string
+): Promise<string> {
+  const audioBuffer = await generateAudioFromElevenLabs(voiceId, text);
+  const base64Audio = audioBuffer.toString('base64');
+  return `data:audio/mpeg;base64,${base64Audio}`;
 }

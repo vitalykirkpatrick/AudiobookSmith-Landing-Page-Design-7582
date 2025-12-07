@@ -23,8 +23,8 @@ export function CustomVoiceSamplesSection() {
   const [audioDurations, setAudioDurations] = useState<Record<string, number>>({});
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  // Fetch custom voice samples with generated audio
-  const { data, isLoading } = trpc.customVoices.generateAll.useQuery();
+  // Fetch custom voice samples with cached or generated audio
+  const { data, isLoading } = trpc.customVoices.listWithAudio.useQuery();
   const samples: CustomVoiceSample[] = data?.samples || [];
 
   const handlePlayPause = (sampleId: string, audioUrl: string | undefined) => {

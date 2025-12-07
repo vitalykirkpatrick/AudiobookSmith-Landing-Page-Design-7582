@@ -127,3 +127,11 @@
 - [x] Implement audio playback for generated samples with duration display
 - [ ] Test audio generation and playback for all 3 samples
 - [ ] Update implementation guide with custom voice samples feature
+
+## S3 Caching for Custom Voice Samples
+- [x] Implement S3 caching logic in customVoiceService.ts
+- [x] Add check-then-generate pattern to avoid repeated API calls
+- [x] Update tRPC router to use caching function
+- [x] Test caching behavior (first load generates, subsequent loads use cache)
+- [x] Verify S3 storage URLs are publicly accessible
+- [x] Demonstrate live caching functionality to user

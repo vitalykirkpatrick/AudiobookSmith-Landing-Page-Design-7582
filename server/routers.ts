@@ -4,7 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { z } from "zod";
 import { getAllVoices, filterVoices, getCategories, getStatistics, getVoiceById } from "./voiceService";
-import { generateAllCustomSamples, getCustomVoiceSamples } from "./customVoiceService";
+import { getAllCustomSamplesWithAudio, getCustomVoiceSamples } from "./customVoiceService";
 
 export const appRouter = router({
     // if you need to use socket.io, read and register route in server/_core/index.ts, all api should start with '/api/' so that the gateway can route correctly
@@ -68,16 +68,18 @@ export const appRouter = router({
       })
   }),
 
-  // Custom voice samples with TTS generation
+  // Custom voice samples with TTS generation and S3 caching
   customVoices: router({
+    // Get voice configurations without audio (fast, no API calls)
     list: publicProcedure.query(() => {
       return {
         success: true,
         samples: getCustomVoiceSamples()
       };
     }),
-    generateAll: publicProcedure.query(async () => {
-      const samples = await generateAllCustomSamples();
+    // Get voice samples with cached or generated audio URLs
+    listWithAudio: publicProcedure.query(async () => {
+      const samples = await getAllCustomSamplesWithAudio();
       return {
         success: true,
         samples
