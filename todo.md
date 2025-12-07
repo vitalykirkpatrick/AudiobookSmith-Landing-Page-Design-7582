@@ -114,3 +114,16 @@
 - [x] Research ElevenLabs supported languages (74 languages with Eleven v3)
 - [x] Update language data in voice service
 - [x] Implement language filter functionality
+
+
+## Custom Voice Samples Feature (Text-to-Speech Generation)
+- [x] Design custom voice samples section layout matching reference image
+- [x] Select 3 high-quality ElevenLabs voices for Fiction, Historical, and General categories
+- [x] Create sample text for each category (Fiction, Historical, General)
+- [x] Implement backend tRPC procedure to generate audio using ElevenLabs TTS API
+- [x] Add custom voice samples section to frontend below main voice cards
+- [x] Display voice cards with gender badges, descriptions, sample text quotes, traits
+- [x] Show voice names, accents, and "BEST FOR" use cases
+- [x] Implement audio playback for generated samples with duration display
+- [ ] Test audio generation and playback for all 3 samples
+- [ ] Update implementation guide with custom voice samples feature

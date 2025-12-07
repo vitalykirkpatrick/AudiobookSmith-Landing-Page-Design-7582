@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { ArrowLeft, Globe, User, Filter, Mic } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CustomVoiceSamplesSection } from "@/components/CustomVoiceSamplesSection";
 import {
   Select,
   SelectContent,
@@ -361,6 +362,9 @@ export default function VoiceSamples() {
           )}
         </div>
       </section>
+
+      {/* Custom Voice Samples Section */}
+      <CustomVoiceSamplesSection />
 
       {/* CTA Section 1: Voice Cloning */}
       <section className="py-16 bg-white">
