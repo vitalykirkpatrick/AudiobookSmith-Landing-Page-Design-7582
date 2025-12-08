@@ -565,9 +565,15 @@
     "accent": "Spanish (Spain)",
     "language": "es",
     "preview_url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/es/elv-038.mp3",
-    "description": "A passionate Spanish female voice with deep emotional range. Perfect for dramatic storytelling, poetry, and intense narratives in Spanish.",
+    "description": "A passionate Spanish female voice with deep emotional range. Perfect for dramatic storytelling, poetry, and intense narratives.",
     "descriptive": "passionate",
-    "use_case": "narrative_story"
+    "use_case": "narrative_story",
+    "alias": "The Matador",
+    "tags": [
+      "Spanish",
+      "Dramatic",
+      "Passionate"
+    ]
   },
   {
     "id": "elv-039",
@@ -580,9 +586,15 @@
     "accent": "French",
     "language": "fr",
     "preview_url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/fr/elv-039.mp3",
-    "description": "A soft, lyrical French male voice. Bringing the charm of Paris to life, ideal for romance, poetry, and artistic narration in French.",
+    "description": "A soft, lyrical French male voice. Bringing the charm of Paris to life, ideal for romance, poetry, and artistic narration.",
     "descriptive": "lyrical",
-    "use_case": "narrative_story"
+    "use_case": "narrative_story",
+    "alias": "The Poet",
+    "tags": [
+      "French",
+      "Soft",
+      "Lyrical"
+    ]
   },
   {
     "id": "elv-040",
@@ -595,9 +607,15 @@
     "accent": "German",
     "language": "de",
     "preview_url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/de/elv-040.mp3",
-    "description": "A deep, resonant German female voice. Perfect for historical documentaries, serious non-fiction, and authoritative news delivery in German.",
+    "description": "A deep, resonant German female voice. Perfect for historical documentaries, serious non-fiction, and authoritative news delivery.",
     "descriptive": "authoritative",
-    "use_case": "narrative_story"
+    "use_case": "narrative_story",
+    "alias": "The Historian",
+    "tags": [
+      "German",
+      "Deep",
+      "Serious"
+    ]
   },
   {
     "id": "elv-041",
@@ -610,9 +628,15 @@
     "accent": "Italian",
     "language": "it",
     "preview_url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/it/elv-041.mp3",
-    "description": "A powerful, dramatic Italian male voice. Brings intensity to opera narrations, art history, and high-fashion commercials in Italian.",
+    "description": "A powerful, dramatic Italian male voice. Brings intensity to opera narrations, art history, and high-fashion commercials.",
     "descriptive": "powerful",
-    "use_case": "narrative_story"
+    "use_case": "narrative_story",
+    "alias": "The Opera",
+    "tags": [
+      "Italian",
+      "Dramatic",
+      "Powerful"
+    ]
   },
   {
     "id": "elv-042",
@@ -625,9 +649,15 @@
     "accent": "Portuguese (EU)",
     "language": "pt",
     "preview_url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/pt/elv-042.mp3",
-    "description": "A clear, adventurous Portuguese female voice. Suitable for travel documentaries, exploration narratives, and European content in Portuguese.",
+    "description": "A clear, adventurous Portuguese female voice. Suitable for travel documentaries, exploration narratives, and European content.",
     "descriptive": "adventurous",
-    "use_case": "narrative_story"
+    "use_case": "narrative_story",
+    "alias": "The Explorer",
+    "tags": [
+      "Portuguese",
+      "Adventurous",
+      "Clear"
+    ]
   },
   {
     "id": "elv-043",
@@ -640,9 +670,15 @@
     "accent": "Hindi",
     "language": "hi",
     "preview_url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/hi/elv-043.mp3",
-    "description": "A calm, wise Hindi male voice. Ideal for spiritual content, meditation guides, and traditional Indian storytelling in Hindi.",
+    "description": "A calm, wise Hindi male voice. Ideal for spiritual content, meditation guides, and traditional Indian storytelling.",
     "descriptive": "wise",
-    "use_case": "narrative_story"
+    "use_case": "narrative_story",
+    "alias": "The Guru",
+    "tags": [
+      "Hindi",
+      "Wise",
+      "Calm"
+    ]
   },
   {
     "id": "elv-044",
@@ -655,8 +691,14 @@
     "accent": "Polish",
     "language": "pl",
     "preview_url": "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/pl/elv-044.mp3",
-    "description": "A gentle Polish male voice with a dreamlike quality. Excellent for fairy tales, children's books, and soft commercial content in Polish.",
+    "description": "A gentle Polish male voice with a dreamlike quality. Excellent for fairy tales, children's books, and soft commercial content.",
     "descriptive": "dreamlike",
-    "use_case": "narrative_story"
+    "use_case": "narrative_story",
+    "alias": "The Dreamer",
+    "tags": [
+      "Polish",
+      "Soft",
+      "Storytelling"
+    ]
   }
 ]
