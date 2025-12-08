@@ -627,6 +627,33 @@ export const voiceMetadata = {
     accent: "Turkish",
     age: "Adult",
     language: "Turkish"
+  },
+  "Li Wei": {
+    alias: "The Scholar",
+    tags: ["Chinese", "Refined", "Professional"],
+    description: "A refined, articulate Mandarin Chinese male voice. Perfect for educational content, cultural narratives, and professional presentations.",
+    gender: "Male",
+    accent: "Mandarin Chinese",
+    age: "Adult",
+    language: "Chinese"
+  },
+  "Dmitri": {
+    alias: "The Philosopher",
+    tags: ["Russian", "Deep", "Contemplative"],
+    description: "A deep, contemplative Russian male voice. Excellent for literary classics, philosophical content, and dramatic narratives.",
+    gender: "Male",
+    accent: "Russian",
+    age: "Adult",
+    language: "Russian"
+  },
+  "Oksana": {
+    alias: "The Poet",
+    tags: ["Ukrainian", "Warm", "Lyrical"],
+    description: "A warm, lyrical Ukrainian female voice. Perfect for poetry, folk tales, and heartfelt storytelling.",
+    gender: "Female",
+    accent: "Ukrainian",
+    age: "Young Adult",
+    language: "Ukrainian"
   }
 };
 
