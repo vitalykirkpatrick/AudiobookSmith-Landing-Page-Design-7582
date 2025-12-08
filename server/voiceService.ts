@@ -153,9 +153,16 @@ function getLanguageCode(language: string): string {
   const languageMap: Record<string, string> = {
     'en-US': 'English (US)',
     'en-GB': 'English (UK)',
-    'en': 'English (US)'
+    'en': 'English (US)',
+    'es': 'Spanish',
+    'fr': 'French',
+    'de': 'German',
+    'it': 'Italian',
+    'pt': 'Portuguese',
+    'hi': 'Hindi',
+    'pl': 'Polish'
   };
-  return languageMap[language] || 'English (US)';
+  return languageMap[language] || language.toUpperCase();
 }
 
 // Process voices and add avatars, traits, use case tags, and language codes
