@@ -329,15 +329,13 @@ const VoiceSamplesPage = () => {
         });
       });
       
-      // 2. Optionally fetch from API for additional voices (if needed)
-      // For now, we ONLY use voiceMetadata.js to ensure consistency
-      // Uncomment below if you want to add API voices that aren't in metadata
-      /*
+      // 2. Fetch from API for additional English voices
       try {
         const data = await elevenlabsApi.getVoices();
         if (data && data.voices && data.voices.length > 0) {
           const metadataNames = new Set(metadataKeys);
           data.voices.forEach(v => {
+            // Only add voices that aren't already in metadata
             if (!metadataNames.has(v.name)) {
               combinedVoices.push(v);
             }
@@ -346,7 +344,6 @@ const VoiceSamplesPage = () => {
       } catch (apiError) {
         console.warn("API fetch failed, using only metadata voices");
       }
-      */
 
       // 3. Format ALL voices with strict URL assignment
       const formattedVoices = combinedVoices.map(voice => {
