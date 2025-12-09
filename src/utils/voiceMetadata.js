@@ -7,7 +7,8 @@ export const voiceMetadata = {
     gender: "Female",
     accent: "British",
     language: "English",
-    age: "Adult"
+    age: "Adult",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/Xb7hH8MSUJpSbSDYk0k2/d10f7534-11f6-41fe-a012-2de1e482d336.mp3"
   },
   "Rachel": {
     alias: "The Narrator",
@@ -16,7 +17,8 @@ export const voiceMetadata = {
     gender: "Female",
     accent: "American",
     language: "English",
-    age: "Adult"
+    age: "Adult",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/FGY2WhTYpPnrIDTdsKH5/67341759-ad08-41a5-be6e-de12fe448618.mp3"
   },
   "Adam": {
     alias: "The Classic",
@@ -25,7 +27,8 @@ export const voiceMetadata = {
     gender: "Male",
     accent: "American",
     language: "English",
-    age: "Adult"
+    age: "Adult",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/pNInz6obpgDQGcFmaJgB/d6905d7a-dd26-4187-bfff-1bd3a5ea7cac.mp3"
   },
   "Antoni": {
     alias: "The Executive",
@@ -34,7 +37,8 @@ export const voiceMetadata = {
     gender: "Male",
     accent: "American",
     language: "English",
-    age: "Adult"
+    age: "Adult",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/bIHbv24MWmeRgasZH58o/8caf8f3d-ad29-4980-af41-53f20c72d7a4.mp3"
   },
   "Josh": {
     alias: "The Storyteller",
@@ -43,7 +47,8 @@ export const voiceMetadata = {
     gender: "Male",
     accent: "American",
     language: "English",
-    age: "Adult"
+    age: "Adult",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/IKne3meq5aSn9XLyUdCD/102de6f2-22ed-43e0-a1f1-111fa75c5481.mp3"
   },
 
   // --- SPANISH (2 Voices) ---
