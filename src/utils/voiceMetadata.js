@@ -269,13 +269,14 @@ export const voiceMetadata = {
 
   // --- HINDI (2 Voices) ---
   "Aarav": {
-    alias: "The Guide",
-    tags: ["Hindi", "Warm", "Instructional"],
-    description: "Clear and warm Hindi male voice. Excellent for educational content, spiritual texts, and guidance.",
+    alias: "The Sage",
+    tags: ["Hindi", "Wise", "Spiritual"],
+    description: "A wise, spiritual Hindi male voice. Excellent for meditation content, spiritual teachings, and philosophical narratives.",
     gender: "Male",
-    accent: "Indian",
+    accent: "Hindi (India)",
     language: "Hindi",
-    age: "Adult"
+    age: "Adult",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/hi/elv-043.mp3"
   },
   "Ananya": {
     alias: "The Storyteller",
@@ -285,6 +286,148 @@ export const voiceMetadata = {
     accent: "Indian",
     language: "Hindi",
     age: "Young Adult"
+  },
+
+  // --- NEW Foreign Language Voices (Expanded Set) ---
+  "Elena": {
+    alias: "The Matador",
+    tags: ["Spanish", "Dramatic", "Passionate"],
+    description: "A passionate Spanish female voice with deep emotional range. Perfect for dramatic storytelling, poetry, and intense narratives.",
+    gender: "Female",
+    accent: "Spanish (Spain)",
+    age: "Adult",
+    language: "Spanish",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/es/elv-038.mp3"
+  },
+  "Marc": {
+    alias: "The Poet",
+    tags: ["French", "Soft", "Lyrical"],
+    description: "A soft, lyrical French male voice. Bringing the charm of Paris to life, ideal for romance, poetry, and artistic narration.",
+    gender: "Male",
+    accent: "French",
+    age: "Adult",
+    language: "French",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/fr/elv-039.mp3"
+  },
+  "Ingrid": {
+    alias: "The Historian",
+    tags: ["German", "Deep", "Serious"],
+    description: "A deep, resonant German female voice. Perfect for historical documentaries, serious non-fiction, and authoritative news delivery.",
+    gender: "Female",
+    accent: "German",
+    age: "Adult",
+    language: "German",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/de/elv-040.mp3"
+  },
+  "Carlo": {
+    alias: "The Maestro",
+    tags: ["Italian", "Dramatic", "Operatic"],
+    description: "A dramatic Italian male voice with operatic flair. Ideal for classical literature, art documentaries, and passionate storytelling.",
+    gender: "Male",
+    accent: "Italian",
+    age: "Adult",
+    language: "Italian",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/it/elv-041.mp3"
+  },
+  "Helena": {
+    alias: "The Explorer",
+    tags: ["Portuguese", "Adventurous", "Warm"],
+    description: "An adventurous Portuguese female voice. Perfect for travel content, exploration narratives, and cultural storytelling.",
+    gender: "Female",
+    accent: "Portuguese (Brazil)",
+    age: "Adult",
+    language: "Portuguese",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/pt/elv-042.mp3"
+  },
+  "Marek": {
+    alias: "The Dreamer",
+    tags: ["Polish", "Soft", "Mystical"],
+    description: "A soft, mystical Polish male voice. Perfect for fairy tales, fantasy content, and dreamlike narratives.",
+    gender: "Male",
+    accent: "Polish",
+    age: "Adult",
+    language: "Polish",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/pl/elv-044.mp3"
+  },
+  "Kenji": {
+    alias: "The Gamer",
+    tags: ["Japanese", "Energetic", "Anime"],
+    description: "An energetic Japanese male voice. Perfect for anime, gaming content, and dynamic storytelling.",
+    gender: "Male",
+    accent: "Japanese",
+    age: "Young Adult",
+    language: "Japanese",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/kenji-ja-5jsnaz68.mp3"
+  },
+  "Soo-jin": {
+    alias: "The K-Drama Star",
+    tags: ["Korean", "Emotional", "Dramatic"],
+    description: "An emotional Korean female voice. Ideal for K-drama style content, romantic stories, and heartfelt narratives.",
+    gender: "Female",
+    accent: "Korean",
+    age: "Young Adult",
+    language: "Korean",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/soo-jin-ko-emctb3ym.mp3"
+  },
+  "Layla": {
+    alias: "The Storyteller",
+    tags: ["Arabic", "Rich", "Engaging"],
+    description: "A rich, engaging Arabic female voice. Excellent for cultural content, traditional stories, and educational narratives.",
+    gender: "Female",
+    accent: "Arabic",
+    age: "Adult",
+    language: "Arabic",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/layla-ar-tr827s3g.mp3"
+  },
+  "Sven": {
+    alias: "The Minimalist",
+    tags: ["Swedish", "Cool", "Modern"],
+    description: "A cool, modern Swedish male voice. Perfect for contemporary content, tech narratives, and minimalist storytelling.",
+    gender: "Male",
+    accent: "Swedish",
+    age: "Adult",
+    language: "Swedish",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/sven-sv-oz4z6hxr.mp3"
+  },
+  "Elif": {
+    alias: "The Orator",
+    tags: ["Turkish", "Deep", "Resonant"],
+    description: "A deep, resonant Turkish female voice. Ideal for historical content, cultural narratives, and powerful storytelling.",
+    gender: "Female",
+    accent: "Turkish",
+    age: "Adult",
+    language: "Turkish",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/elif-tr-ij9yrnwo.mp3"
+  },
+  "Li Wei": {
+    alias: "The Scholar",
+    tags: ["Chinese", "Refined", "Educational"],
+    description: "A refined Chinese male voice. Perfect for educational content, cultural documentaries, and sophisticated narratives.",
+    gender: "Male",
+    accent: "Chinese (Mandarin)",
+    age: "Adult",
+    language: "Chinese",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/li wei-zh-zrl1hba9.mp3"
+  },
+  "Dmitri": {
+    alias: "The Philosopher",
+    tags: ["Russian", "Deep", "Contemplative"],
+    description: "A deep, contemplative Russian male voice. Excellent for literary classics, philosophical content, and dramatic narratives.",
+    gender: "Male",
+    accent: "Russian",
+    age: "Adult",
+    language: "Russian",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/dmitri-ru-8stuvxby.mp3"
+  },
+  "Oksana": {
+    alias: "The Poet",
+    tags: ["Ukrainian", "Warm", "Lyrical"],
+    description: "A warm, lyrical Ukrainian female voice. Perfect for poetry, folk tales, and heartfelt storytelling.",
+    gender: "Female",
+    accent: "Ukrainian",
+    age: "Adult",
+    language: "Ukrainian",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/oksana-uk-93k2rp6h.mp3"
   }
 };
 
