@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(31, 41, 55, 0.5);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(59, 130, 246, 0.5);
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(59, 130, 246, 0.7);
+}
+
+/* Animation for audio waves */
+@keyframes audioWave {
+  0% { height: 5px; }
+  50% { height: 30px; }
+  100% { height: 5px; }
+}
+
+@keyframes wave {
+  0% { transform: translateX(-50px); }
+  50% { transform: translateX(300px); }
+  100% { transform: translateX(-50px); }
+}
+
+@keyframes waveFlow {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100vw); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes waveGlow {
+  0%, 100% { opacity: 0.3; filter: blur(0px); }
+  50% { opacity: 0.8; filter: blur(1px); }
+}
+
+/* Interactive wave effects */
+.wave-interactive {
+  transition: all 0.1s ease-out;
+}
+
+.wave-interactive:hover {
+  transform: scaleY(1.5);
+  opacity: 0.9;
+}
+
+/* Responsive wave adjustments */
+@media (max-width: 768px) {
+  .wave-container {
+    transform: scale(0.8);
+  }
+}
+
+@media (max-width: 480px) {
+  .wave-container {
+    transform: scale(0.6);
+  }
+}
