@@ -239,7 +239,7 @@ const VoiceCard = ({ voice, isPlaying, onPlay, onPause }) => {
           {isForeign && (
             <p className="text-[10px] text-gray-400 text-center mt-2 italic flex items-center justify-center">
               <SafeIcon icon={FiGlobe} className="w-3 h-3 mr-1" />
-              Preview in International English
+              Sample in {voice.language}
             </p>
           )}
         </div>
@@ -368,9 +368,10 @@ const VoiceSamplesPage = () => {
         }
 
         // --- ROBUST URL ASSIGNMENT LOGIC ---
-        let finalPreviewUrl = voice.preview_url;
+        // Priority: metadata preview_url > API preview_url > mapped fallback
+        let finalPreviewUrl = meta.preview_url || voice.preview_url;
 
-        // If no URL from API, OR it's a foreign voice we just added
+        // If no URL from metadata or API, use fallback mapping
         if (!finalPreviewUrl) {
            const mappedIndex = CHARACTER_AUDIO_MAP[voice.name];
            
