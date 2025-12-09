@@ -11,61 +11,70 @@ import { voiceMetadata, getAvatarUrl } from '../utils/voiceMetadata';
 const { FiPlay, FiPause, FiArrowLeft, FiUser, FiGlobe, FiMic, FiFilter, FiCheck, FiStar } = FiIcons;
 const { BsWaveform } = BsIcons;
 
-// ----------------------------------------------------------------------
-// ✅ RELIABLE AUDIO SOURCES
-// ----------------------------------------------------------------------
-// These are high-availability public URLs. We use these to ensure
-// every character has a working voice sample.
-const AUDIO_SOURCES = {
-  male: [
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/pNInz6obpgDQGcFmaJgB/df6788f9-5c96-470d-8312-a63b3eb42500.mp3", // Deep/Narrative
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/ErXwobaYiN019PkySvjV/38d6345e-99e0-466d-921c-4b630c72e2db.mp3", // Soft/Business
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/TxGEqnHWrfWFTfGW9XjX/3e0b0e52-320d-4f47-a92e-365287752697.mp3", // Deep/Story
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/VR6AewLTigWg4xSOukaG/16d3e69f-3d12-424d-a517-910f443b81c2.mp3", // Gravelly
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/yoZ06aMxZJJ28mfd3POQ/1c4d417c-4403-455f-8611-305140d34800.mp3", // Raspy/Old
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/ODq5zmih8GrVes37Dizj/adb10a26-25f0-463d-8d4e-1507f3dbcbfa.mp3", // Energetic
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/5Q0t7uMcjvnagumLfvZi/887df929-2363-4412-8706-2cb3a90b4097.mp3", // News
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/ZQe5CZNOzWyzPSCn5a3c/26027c44-3233-4246-9b6f-3c5b3eb38235.mp3", // Calm
-  ],
-  female: [
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/21m00Tcm4TlvDq8ikWAM/68434778-3603-4672-b546-aa4e23364230.mp3", // Standard/Narrative
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/EXAVITQu4vr4xnSDxMaL/00045432-843e-42c2-bb53-43574730702d.mp3", // Soft/Whispery
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/AZnzlk1XvdvUeBnXmlld/507e1279-566b-4e08-9d75-9c5950585640.mp3", // Strong/News
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/MF3mGyEYCl7XYWbV9V6O/d9ff78ba-d01c-47f6-b0ef-dd41e3cdf6d4.mp3", // Young/Energetic
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/FGY2WhTYpPnrIDTdsKH5/67341759-ad08-41a5-be6e-de12fe448618.mp3", // Professional
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/LcfcDJNUP1GQjkzn1xUU/e90c6678-f0d3-4767-9883-5d0ecf5894a8.mp3", // Meditative
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/ThT5KcBeYPX3keUQqHPh/981f0855-6598-48d2-9f8f-b6d92f431ba3.mp3", // Bright
-    "https://storage.googleapis.com/eleven-public-prod/premade/voices/XrExE9yKIg1WjnnlVkGX/b930e18d-6b4d-466e-bab3-0e1ca402659b.mp3", // Mature
-  ]
-};
-
-// Map specific characters to specific audio indices to ensure consistency
-// This prevents "Diego" from sounding like "Sofia"
-const CHARACTER_AUDIO_MAP = {
-  // Spanish
-  "Sofia": 1, "Mateo": 0, "Isabella": 3, "Diego": 5, "Valentina": 5,
-  // French
-  "Marcel": 1, "Amelie": 2, "Hugo": 6, "Celine": 4,
-  // German
-  "Klaus": 6, "Hanna": 0, "Lukas": 5, "Greta": 2,
-  // Italian
-  "Giovanni": 3, "Francesca": 4, "Marco": 1,
-  // Japanese
-  "Yoko": 1, "Kenji": 2, "Sakura": 3,
-  // Portuguese
-  "Camila": 5, "Thiago": 0,
-  // Polish
-  "Kacper": 4, "Zuzanna": 0,
-  // Hindi
-  "Aarav": 6, "Ananya": 1
-};
+// Official ElevenLabs Premade Voices Fallback List
+// Used only if the API fails or returns no data, ensuring we show real ElevenLabs samples.
+const FALLBACK_ELEVENLABS_VOICES = [
+  {
+    voice_id: "21m00Tcm4TlvDq8ikWAM",
+    name: "Rachel",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/21m00Tcm4TlvDq8ikWAM/68434778-3603-4672-b546-aa4e23364230.mp3",
+    category: "premade"
+  },
+  {
+    voice_id: "pNInz6obpgDQGcFmaJgB",
+    name: "Adam",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/pNInz6obpgDQGcFmaJgB/df6788f9-5c96-470d-8312-a63b3eb42500.mp3",
+    category: "premade"
+  },
+  {
+    voice_id: "ErXwobaYiN019PkySvjV",
+    name: "Antoni",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/ErXwobaYiN019PkySvjV/38d6345e-99e0-466d-921c-4b630c72e2db.mp3",
+    category: "premade"
+  },
+  {
+    voice_id: "TxGEqnHWrfWFTfGW9XjX",
+    name: "Josh",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/TxGEqnHWrfWFTfGW9XjX/3e0b0e52-320d-4f47-a92e-365287752697.mp3",
+    category: "premade"
+  },
+  {
+    voice_id: "VR6AewLTigWg4xSOukaG",
+    name: "Arnold",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/VR6AewLTigWg4xSOukaG/16d3e69f-3d12-424d-a517-910f443b81c2.mp3",
+    category: "premade"
+  },
+  {
+    voice_id: "yoZ06aMxZJJ28mfd3POQ",
+    name: "Sam",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/yoZ06aMxZJJ28mfd3POQ/1c4d417c-4403-455f-8611-305140d34800.mp3",
+    category: "premade"
+  },
+  {
+    voice_id: "EXAVITQu4vr4xnSDxMaL",
+    name: "Bella",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/EXAVITQu4vr4xnSDxMaL/00045432-843e-42c2-bb53-43574730702d.mp3",
+    category: "premade"
+  },
+  {
+    voice_id: "AZnzlk1XvdvUeBnXmlld",
+    name: "Domi",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/AZnzlk1XvdvUeBnXmlld/507e1279-566b-4e08-9d75-9c5950585640.mp3",
+    category: "premade"
+  },
+  {
+    voice_id: "MF3mGyEYCl7XYWbV9V6O",
+    name: "Elli",
+    preview_url: "https://storage.googleapis.com/eleven-public-prod/premade/voices/MF3mGyEYCl7XYWbV9V6O/d9ff78ba-d01c-47f6-b0ef-dd41e3cdf6d4.mp3",
+    category: "premade"
+  }
+];
 
 const VoiceCard = ({ voice, isPlaying, onPlay, onPause }) => {
   const audioRef = useRef(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  // Reset state when voice changes
   useEffect(() => {
     setError(false);
     setIsLoading(false);
@@ -73,13 +82,7 @@ const VoiceCard = ({ voice, isPlaying, onPlay, onPause }) => {
 
   const handlePlayPause = async (e) => {
     e.stopPropagation();
-    
-    // Basic validation
-    if (!voice.sample_voice_url) {
-      console.warn("No URL found for", voice.character);
-      setError(true);
-      return;
-    }
+    if (!voice.sample_voice_url) return;
 
     if (isPlaying) {
       onPause();
@@ -92,58 +95,40 @@ const VoiceCard = ({ voice, isPlaying, onPlay, onPause }) => {
     try {
       if (audioRef.current) {
         audioRef.current.src = voice.sample_voice_url;
-        
-        // Success handler
         audioRef.current.onloadeddata = () => {
           setIsLoading(false);
           onPlay(voice.uuid, audioRef.current);
         };
-
-        // Error handler
         audioRef.current.onerror = (e) => {
-          console.error('Audio load error for:', voice.character, e);
+          console.error('Audio failed to load:', voice.sample_voice_url, e);
           setIsLoading(false);
           setError(true);
         };
-        
-        // Attempt play
-        const playPromise = audioRef.current.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(err => {
-            console.error('Playback promise error:', err);
-            setIsLoading(false);
-            setError(true);
-          });
-        }
+        audioRef.current.load();
       }
     } catch (err) {
-      console.error("Critical playback error", err);
       setIsLoading(false);
       setError(true);
+      console.error('Audio playback error:', err);
     }
   };
 
   const getGenderBadgeColor = (gender) => {
-    const g = gender?.toLowerCase() || 'neutral';
+    const g = gender.toLowerCase();
     if (g === 'male') return 'bg-blue-100 text-blue-800 border-blue-200';
     if (g === 'female') return 'bg-pink-100 text-pink-800 border-pink-200';
     return 'bg-gray-100 text-gray-800 border-gray-200';
   };
 
-  // Check if this is a non-English voice to show the disclaimer
-  const isForeign = voice.language !== 'English';
-
   return (
     <motion.div 
-      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full border border-gray-100 group"
+      className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col h-full"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
     >
       <audio ref={audioRef} preload="none" crossOrigin="anonymous" />
       
-      {/* Header Section */}
-      <div className={`p-6 bg-gradient-to-r ${isForeign ? 'from-purple-600 to-indigo-600' : 'from-blue-500 to-cyan-600'} relative overflow-hidden`}>
-        {/* Background Decoration */}
+      <div className="p-6 bg-gradient-to-r from-blue-500 to-purple-600 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute -right-4 -top-4 w-24 h-24 rounded-full bg-white blur-xl"></div>
           <div className="absolute -left-4 -bottom-4 w-20 h-20 rounded-full bg-black blur-xl"></div>
@@ -158,7 +143,7 @@ const VoiceCard = ({ voice, isPlaying, onPlay, onPause }) => {
                 className="w-full h-full object-cover transform scale-110 mt-1"
                 loading="lazy"
                 onError={(e) => {
-                  e.target.onerror = null; 
+                  e.target.onerror = null;
                   e.target.src = `https://ui-avatars.com/api/?name=${voice.character}&background=random&color=fff`;
                 }}
               />
@@ -173,13 +158,12 @@ const VoiceCard = ({ voice, isPlaying, onPlay, onPause }) => {
         </div>
         
         <div className="absolute top-4 right-4 flex flex-col items-end gap-1.5">
-          <div className="bg-black/20 backdrop-blur-md text-white text-xs px-2 py-1 rounded-full border border-white/20 font-medium flex items-center shadow-sm">
+          <div className="bg-black/20 backdrop-blur-md text-white text-xs px-2 py-1 rounded-full border border-white/20 font-medium flex items-center">
             <SafeIcon icon={FiGlobe} className="w-3 h-3 mr-1" /> {voice.language}
           </div>
         </div>
       </div>
 
-      {/* Body Section */}
       <div className="p-5 flex flex-col flex-grow">
         <div className="flex flex-wrap items-center gap-2 mb-4">
           <span className={`text-[10px] uppercase tracking-wide px-2 py-1 rounded-full font-bold border ${getGenderBadgeColor(voice.gender)}`}>
@@ -199,24 +183,25 @@ const VoiceCard = ({ voice, isPlaying, onPlay, onPause }) => {
         <div className="mt-auto pt-4 border-t border-gray-100">
           <button 
             onClick={handlePlayPause}
-            disabled={isLoading}
+            disabled={isLoading || error}
             className={`flex items-center justify-center space-x-2 px-4 py-3 rounded-lg font-bold text-sm transition-all w-full shadow-md ${
               isPlaying 
                 ? 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200' 
                 : 'bg-[#3b82f6] text-white hover:bg-blue-600'
             } ${error ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed' : ''}`}
+            title={error ? "Sample currently unavailable" : ""}
           >
             {isLoading ? (
               <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
             ) : error ? (
               <>
                 <SafeIcon icon={FiMic} className="w-4 h-4" />
-                <span>Sample Unavailable</span>
+                <span>Unavailable</span>
               </>
             ) : isPlaying ? (
               <>
                 <SafeIcon icon={FiPause} className="w-4 h-4" />
-                <span>Pause</span>
+                <span>Pause Sample</span>
                 <div className="flex items-center space-x-0.5 ml-2 h-3">
                   {[...Array(5)].map((_, i) => (
                     <motion.div
@@ -235,13 +220,6 @@ const VoiceCard = ({ voice, isPlaying, onPlay, onPause }) => {
               </>
             )}
           </button>
-          
-          {isForeign && (
-            <p className="text-[10px] text-gray-400 text-center mt-2 italic flex items-center justify-center">
-              <SafeIcon icon={FiGlobe} className="w-3 h-3 mr-1" />
-              Sample in {voice.language}
-            </p>
-          )}
         </div>
       </div>
     </motion.div>
@@ -261,11 +239,6 @@ const VoiceSamplesPage = () => {
   const [selectedLanguage, setSelectedLanguage] = useState('all');
   const [selectedGenre, setSelectedGenre] = useState('all');
 
-  // Derived options state
-  const [genderOptions, setGenderOptions] = useState([{ value: 'all', label: 'All Genders' }]);
-  const [languageOptions, setLanguageOptions] = useState([{ value: 'all', label: 'All Languages' }]);
-  const [genreOptions, setGenreOptions] = useState([{ value: 'all', label: 'All Categories' }]);
-
   useEffect(() => {
     fetchVoices();
     return () => {
@@ -276,88 +249,45 @@ const VoiceSamplesPage = () => {
     };
   }, []);
 
-  // Update filter options whenever voices change
-  useEffect(() => {
-    if (voices.length > 0) {
-      const genders = new Set(voices.map(v => v.gender));
-      setGenderOptions([
-        { value: 'all', label: 'All Genders' },
-        ...Array.from(genders).filter(Boolean).sort().map(g => ({ value: g, label: g }))
-      ]);
-
-      const languages = new Set(voices.map(v => v.language));
-      setLanguageOptions([
-        { value: 'all', label: 'All Languages' },
-        ...Array.from(languages).filter(Boolean).sort().map(l => ({ value: l, label: l }))
-      ]);
-
-      const allTags = new Set();
-      voices.forEach(voice => {
-        if (voice.tags && Array.isArray(voice.tags)) {
-          voice.tags.forEach(tag => allTags.add(tag));
-        }
-      });
-      const excludedTags = ['American', 'British', 'Australian', 'Male', 'Female', 'Adult', 'Young Adult', 'Older', 'Child'];
-      const sortedGenres = Array.from(allTags)
-        .filter(tag => !excludedTags.includes(tag))
-        .sort();
-      setGenreOptions([
-        { value: 'all', label: 'All Categories' },
-        ...sortedGenres.map(t => ({ value: t, label: t }))
-      ]);
-    }
-  }, [voices]);
-
   const fetchVoices = async () => {
     try {
       setLoading(true);
       setError(null);
       
-      // PRIORITIZE voiceMetadata.js voices over API voices
-      const metadataKeys = Object.keys(voiceMetadata);
-      const combinedVoices = [];
+      let rawVoices = [];
       
-      // 1. Add ALL voices from voiceMetadata.js first
-      metadataKeys.forEach((key) => {
-        const meta = voiceMetadata[key];
-        combinedVoices.push({
-          voice_id: `meta-${key.toLowerCase().replace(/\s+/g, '-')}`,
-          name: key,
-          preview_url: meta.preview_url || null,
-          category: 'premade',
-          labels: {} 
-        });
-      });
-      
-      // 2. Fetch from API for additional English voices
+      // 1. Try fetching from API
       try {
         const data = await elevenlabsApi.getVoices();
         if (data && data.voices && data.voices.length > 0) {
-          const metadataNames = new Set(metadataKeys);
-          data.voices.forEach(v => {
-            // Only add voices that aren't already in metadata
-            if (!metadataNames.has(v.name)) {
-              combinedVoices.push(v);
-            }
-          });
+          rawVoices = data.voices;
         }
       } catch (apiError) {
-        console.warn("API fetch failed, using only metadata voices");
+        console.warn("API fetch failed, falling back to offline list");
       }
 
-      // 3. Format ALL voices with strict URL assignment
-      const formattedVoices = combinedVoices.map(voice => {
+      // 2. If API failed or returned empty list, use AUTHENTIC fallback list
+      // We do NOT inject unmixr samples anymore.
+      if (rawVoices.length === 0) {
+        rawVoices = FALLBACK_ELEVENLABS_VOICES;
+      }
+
+      const formattedVoices = rawVoices.map(voice => {
         const labels = voice.labels || {};
         const meta = voiceMetadata[voice.name] || {};
         
+        // Normalize gender
         let genderRaw = meta.gender || labels.gender || 'Neutral';
         const gender = genderRaw.charAt(0).toUpperCase() + genderRaw.slice(1).toLowerCase();
         
+        // Normalize accent
         let accentRaw = meta.accent || labels.accent || 'American';
         const accent = accentRaw.replace(/\b\w/g, l => l.toUpperCase());
         
+        // Use Language from metadata, default to English
         const language = meta.language || 'English';
 
+        // Normalize tags
         let tags = meta.tags;
         if (!tags) {
           const useCase = labels.use_case || 'Narration';
@@ -367,55 +297,29 @@ const VoiceSamplesPage = () => {
           tags = tags.map(t => t.replace(/\b\w/g, l => l.toUpperCase()));
         }
 
-        // --- ROBUST URL ASSIGNMENT LOGIC ---
-        // Priority: metadata preview_url > API preview_url > mapped fallback
-        let finalPreviewUrl = meta.preview_url || voice.preview_url;
-
-        // If no URL from metadata or API, use fallback mapping
-        if (!finalPreviewUrl) {
-           const mappedIndex = CHARACTER_AUDIO_MAP[voice.name];
-           
-           if (mappedIndex !== undefined) {
-             // We have a specific assignment for this character
-             const samples = gender === 'Male' ? AUDIO_SOURCES.male : AUDIO_SOURCES.female;
-             finalPreviewUrl = samples[mappedIndex % samples.length];
-           } else {
-             // Fallback: Create a unique index for the sample array based on the name's characters
-             const nameHash = voice.name.split('').reduce((acc, char, idx) => acc + char.charCodeAt(0) * (idx + 1), 0);
-             const samples = gender === 'Male' ? AUDIO_SOURCES.male : AUDIO_SOURCES.female;
-             finalPreviewUrl = samples[nameHash % samples.length];
-           }
-        }
-
         return {
           uuid: voice.voice_id,
           character: voice.name,
           alias: meta.alias || "Professional Narrator",
           gender: gender,
           language: language,
-          sample_voice_url: finalPreviewUrl,
+          sample_voice_url: voice.preview_url, // STRICTLY use the source URL
           tags: tags,
-          description: meta.description || labels.description || `A professional ${accent} voice suitable for audiobooks.`,
+          description: meta.description || labels.description || `A professional ${accent} voice suitable for audiobooks and clear narration.`,
           avatar_url: getAvatarUrl(voice.name, gender, tags),
           category: voice.category || 'premade', 
           accent: accent
         };
       });
 
-      // Sort: English first, then by Language
-      const sortedVoices = formattedVoices
-        .filter(v => v.category === 'premade')
-        .sort((a, b) => {
-          if (a.language === 'English' && b.language !== 'English') return -1;
-          if (a.language !== 'English' && b.language === 'English') return 1;
-          if (a.language !== b.language) return a.language.localeCompare(b.language);
-          return a.character.localeCompare(b.character);
-        });
+      // Filter to show only "premade" (Standard ElevenLabs voices)
+      const standardVoicesOnly = formattedVoices.filter(v => v.category === 'premade');
+      standardVoicesOnly.sort((a, b) => a.character.localeCompare(b.character));
       
-      setVoices(sortedVoices);
+      setVoices(standardVoicesOnly);
     } catch (err) {
       console.error('Error processing voices:', err);
-      setError('Unable to load voice library.');
+      setError('Unable to load voice library. Please check your connection or try again later.');
     } finally {
       setLoading(false);
     }
@@ -428,16 +332,11 @@ const VoiceSamplesPage = () => {
     }
     setCurrentlyPlaying(voiceId);
     setCurrentAudio(audioElement);
-    
-    // Safety check for play permission
-    const playPromise = audioElement.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(err => {
-        console.error('Error playing audio:', err);
-        setCurrentlyPlaying(null);
-        setCurrentAudio(null);
-      });
-    }
+    audioElement.play().catch(err => {
+      console.error('Error playing audio:', err);
+      setCurrentlyPlaying(null);
+      setCurrentAudio(null);
+    });
     
     audioElement.onended = () => {
       setCurrentlyPlaying(null);
@@ -463,6 +362,33 @@ const VoiceSamplesPage = () => {
     navigate(path);
     setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 100);
   };
+
+  // Generate unique filter options
+  const genderOptions = [
+    { value: 'all', label: 'All Genders' },
+    ...Array.from(new Set(voices.map(v => v.gender))).filter(Boolean).sort().map(gender => ({ value: gender, label: gender }))
+  ];
+
+  const languageOptions = [
+    { value: 'all', label: 'All Languages' },
+    ...Array.from(new Set(voices.map(v => v.language))).filter(Boolean).sort().map(lang => ({ value: lang, label: lang }))
+  ];
+
+  const allTags = new Set();
+  voices.forEach(voice => {
+    if (voice.tags && Array.isArray(voice.tags)) {
+      voice.tags.forEach(tag => allTags.add(tag));
+    }
+  });
+  
+  const excludedTags = ['American', 'British', 'Australian', 'Male', 'Female', 'Adult', 'Young Adult', 'Older', 'Child'];
+  const genreOptions = [
+    { value: 'all', label: 'All Categories' },
+    ...Array.from(allTags)
+      .filter(tag => !excludedTags.includes(tag))
+      .sort()
+      .map(tag => ({ value: tag, label: tag }))
+  ];
 
   const filteredVoices = voices.filter(voice => {
     const genderMatch = selectedGender === 'all' || voice.gender === selectedGender;
