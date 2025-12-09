@@ -28,28 +28,19 @@ const AdminDashboard = () => {
       switch (activeTab) {
         case 'users':
           const { data: userData } = await database.from('users_audiobooksmith_2024')
-            .select(`
-              *,
-              profiles:user_profiles_audiobooksmith_2024(*)
-            `);
+            .select('*, profiles:user_profiles_audiobooksmith_2024(*)');
           setUsers(userData);
           break;
 
         case 'projects':
           const { data: projectData } = await database.from('book_projects_audiobooksmith_2024')
-            .select(`
-              *,
-              user:users_audiobooksmith_2024(name, email)
-            `);
+            .select('*, user:users_audiobooksmith_2024(name, email)');
           setProjects(projectData);
           break;
 
         case 'subscriptions':
           const { data: subData } = await database.from('subscriptions_audiobooksmith_2024')
-            .select(`
-              *,
-              user:users_audiobooksmith_2024(name, email)
-            `);
+            .select('*, user:users_audiobooksmith_2024(name, email)');
           setSubscriptions(subData);
           break;
       }
@@ -91,7 +82,7 @@ const AdminDashboard = () => {
     
     const link = document.createElement("a");
     link.setAttribute("href", encodeURI(csvContent));
-    link.setAttribute("download", `${filename}_${new Date().toISOString()}.csv`);
+    link.setAttribute("download", filename + "_" + new Date().toISOString() + ".csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

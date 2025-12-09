@@ -5,7 +5,7 @@ import SEOOptimizedLandingPage from './components/SEOOptimizedLandingPage';
 import OnboardingPage from './components/OnboardingPage';
 import LoginPage from './components/LoginPage';
 import SignupForm from './components/SignupForm';
-import AdminDashboard from './components/AdminDashboard';
+// import AdminDashboard from './components/AdminDashboard'; // Disabled for now
 import VoiceSamplesPage from './components/VoiceSamplesPage';
 import PricingPage from './components/PricingPage';
 import CompactVoiceCloning from './components/VoiceCloning/CompactVoiceCloning';
@@ -39,7 +39,7 @@ const App = () => {
             <Route path="/signup" element={<SignupForm />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/admin" element={<AdminDashboard />} />
+            {/* <Route path="/admin" element={<AdminDashboard />} /> */} {/* Disabled for now */}
             <Route path="/voice-samples" element={<VoiceSamplesPage />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/voice-cloning" element={<CompactVoiceCloning />} />
