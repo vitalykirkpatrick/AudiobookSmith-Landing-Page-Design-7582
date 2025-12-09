@@ -313,37 +313,40 @@ const VoiceSamplesPage = () => {
       setLoading(true);
       setError(null);
       
-      let rawVoices = [];
-      const apiVoiceIds = new Set();
+      // PRIORITIZE voiceMetadata.js voices over API voices
+      const metadataKeys = Object.keys(voiceMetadata);
+      const combinedVoices = [];
       
-      // 1. Try fetching from API
+      // 1. Add ALL voices from voiceMetadata.js first
+      metadataKeys.forEach((key) => {
+        const meta = voiceMetadata[key];
+        combinedVoices.push({
+          voice_id: `meta-${key.toLowerCase().replace(/\s+/g, '-')}`,
+          name: key,
+          preview_url: meta.preview_url || null,
+          category: 'premade',
+          labels: {} 
+        });
+      });
+      
+      // 2. Optionally fetch from API for additional voices (if needed)
+      // For now, we ONLY use voiceMetadata.js to ensure consistency
+      // Uncomment below if you want to add API voices that aren't in metadata
+      /*
       try {
         const data = await elevenlabsApi.getVoices();
         if (data && data.voices && data.voices.length > 0) {
-          rawVoices = data.voices;
-          rawVoices.forEach(v => apiVoiceIds.add(v.name));
-        }
-      } catch (apiError) {
-        console.warn("API fetch failed, falling back to metadata");
-      }
-
-      // 2. Merge metadata voices (ensure foreign voices exist)
-      const metadataKeys = Object.keys(voiceMetadata);
-      const combinedVoices = [...rawVoices];
-
-      metadataKeys.forEach((key) => {
-        if (!apiVoiceIds.has(key)) {
-          // Create mock entry for voices in metadata but not in API
-          const meta = voiceMetadata[key];
-          combinedVoices.push({
-            voice_id: `mock-${key.toLowerCase().replace(/\s+/g, '-')}`,
-            name: key,
-            preview_url: null, // Will be assigned below via mapping
-            category: 'premade',
-            labels: {} 
+          const metadataNames = new Set(metadataKeys);
+          data.voices.forEach(v => {
+            if (!metadataNames.has(v.name)) {
+              combinedVoices.push(v);
+            }
           });
         }
-      });
+      } catch (apiError) {
+        console.warn("API fetch failed, using only metadata voices");
+      }
+      */
 
       // 3. Format ALL voices with strict URL assignment
       const formattedVoices = combinedVoices.map(voice => {
