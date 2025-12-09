@@ -270,8 +270,7 @@ export const voiceMetadata = {
     gender: "Male",
     accent: "Chinese (Mandarin)",
     age: "Adult",
-    language: "Chinese",
-    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/li wei-zh-zrl1hba9.mp3"
+    language: "Chinese"
   },
   "Dmitri": {
     alias: "The Philosopher",
