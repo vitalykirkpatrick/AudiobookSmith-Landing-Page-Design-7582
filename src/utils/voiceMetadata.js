@@ -46,62 +46,38 @@ export const voiceMetadata = {
     age: "Adult"
   },
 
-  // --- SPANISH (5 Voices) ---
-  "Sofia": {
-    alias: "La Narradora",
-    tags: ["Spanish", "Warm", "Audiobook"],
-    description: "A warm and inviting Spanish female voice. Perfect for audiobooks, storytelling, and engaging commercial content.",
+  // --- SPANISH (2 Voices) ---
+  "Elena": {
+    alias: "The Matador",
+    tags: ["Spanish", "Dramatic", "Passionate"],
+    description: "A passionate Spanish female voice with deep emotional range. Perfect for dramatic storytelling, poetry, and intense narratives.",
     gender: "Female",
-    accent: "Mexican",
+    accent: "Spanish (Spain)",
+    age: "Adult",
     language: "Spanish",
-    age: "Adult"
-  },
-  "Mateo": {
-    alias: "El Profesional",
-    tags: ["Spanish", "Deep", "Corporate"],
-    description: "A deep, professional male voice suitable for business presentations and serious narration in Spanish.",
-    gender: "Male",
-    accent: "Castilian",
-    language: "Spanish",
-    age: "Adult"
-  },
-  "Isabella": {
-    alias: "La Amiga",
-    tags: ["Spanish", "Friendly", "Casual"],
-    description: "Friendly and casual Spanish female voice. Great for conversational content, blogs, and lifestyle narration.",
-    gender: "Female",
-    accent: "Spanish",
-    language: "Spanish",
-    age: "Young Adult"
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/es/elv-038.mp3"
   },
   "Diego": {
-    alias: "El Locutor",
-    tags: ["Spanish", "Energy", "Broadcast"],
-    description: "Energetic and clear male voice, ideal for broadcasting, commercials, and high-energy Spanish content.",
+    alias: "El Profesional",
+    tags: ["Spanish", "Deep", "Corporate"],
+    description: "A deep, professional Spanish male voice. Suitable for business presentations and serious narration.",
     gender: "Male",
-    accent: "Mexican",
+    accent: "Spanish (Mexico)",
     language: "Spanish",
-    age: "Adult"
-  },
-  "Valentina": {
-    alias: "La Suave",
-    tags: ["Spanish", "Soft", "Poetic"],
-    description: "Soft, melodic voice perfect for poetry, meditation apps, and romantic fiction in Spanish.",
-    gender: "Female",
-    accent: "Colombian",
-    language: "Spanish",
-    age: "Young Adult"
+    age: "Adult",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/es/diego-es-mx-7k3p2r9s.mp3"
   },
 
-  // --- FRENCH (4 Voices) ---
-  "Marcel": {
-    alias: "L'Artiste",
-    tags: ["French", "Sophisticated", "Smooth"],
-    description: "Smooth, sophisticated male voice. Perfect for French literary fiction, art documentaries, and luxury branding.",
+  // --- FRENCH (2 Voices) ---
+  "Marc": {
+    alias: "The Poet",
+    tags: ["French", "Soft", "Lyrical"],
+    description: "A soft, lyrical French male voice. Bringing the charm of Paris to life, ideal for romance, poetry, and artistic narration.",
     gender: "Male",
     accent: "French",
+    age: "Adult",
     language: "French",
-    age: "Adult"
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/fr/elv-039.mp3"
   },
   "Amelie": {
     alias: "La Douceur",
@@ -110,28 +86,21 @@ export const voiceMetadata = {
     gender: "Female",
     accent: "French",
     language: "French",
-    age: "Young Adult"
-  },
-  "Hugo": {
-    alias: "Le Guide",
-    tags: ["French", "Clear", "Informative"],
-    description: "Clear and informative French male voice. Excellent for travel guides, museums, and educational material.",
-    gender: "Male",
-    accent: "French",
-    language: "French",
-    age: "Adult"
-  },
-  "Celine": {
-    alias: "La Moderne",
-    tags: ["French", "Chic", "Modern"],
-    description: "Modern and chic French female voice. Great for fashion, lifestyle content, and contemporary fiction.",
-    gender: "Female",
-    accent: "French",
-    language: "French",
-    age: "Adult"
+    age: "Young Adult",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/fr/amelie-fr-6h8k4n2p.mp3"
   },
 
-  // --- GERMAN (4 Voices) ---
+  // --- GERMAN (2 Voices) ---
+  "Ingrid": {
+    alias: "The Historian",
+    tags: ["German", "Deep", "Serious"],
+    description: "A deep, resonant German female voice. Perfect for historical documentaries, serious non-fiction, and authoritative news delivery.",
+    gender: "Female",
+    accent: "German",
+    age: "Adult",
+    language: "German",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/de/elv-040.mp3"
+  },
   "Klaus": {
     alias: "Der Ingenieur",
     tags: ["German", "Precise", "Technical"],
@@ -139,45 +108,20 @@ export const voiceMetadata = {
     gender: "Male",
     accent: "German",
     language: "German",
-    age: "Adult"
-  },
-  "Hanna": {
-    alias: "Die Erzählerin",
-    tags: ["German", "Warm", "Story"],
-    description: "Warm and engaging German female voice. Well-suited for audiobooks, children's stories, and friendly narration.",
-    gender: "Female",
-    accent: "German",
-    language: "German",
-    age: "Adult"
-  },
-  "Lukas": {
-    alias: "Der Student",
-    tags: ["German", "Young", "Fresh"],
-    description: "Young and fresh German male voice. Ideal for youth-oriented content, startups, and modern apps.",
-    gender: "Male",
-    accent: "German",
-    language: "German",
-    age: "Young Adult"
-  },
-  "Greta": {
-    alias: "Die Professionelle",
-    tags: ["German", "Serious", "News"],
-    description: "Serious and professional German female voice. Excellent for news, corporate reports, and formal announcements.",
-    gender: "Female",
-    accent: "German",
-    language: "German",
-    age: "Adult"
+    age: "Adult",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/de/klaus-de-4m9n7p2k.mp3"
   },
 
-  // --- ITALIAN (3 Voices) ---
-  "Giovanni": {
-    alias: "Il Cuoco",
-    tags: ["Italian", "Passionate", "Warm"],
-    description: "Warm and passionate Italian male voice. Great for culinary content, travel, and expressive storytelling.",
+  // --- ITALIAN (2 Voices) ---
+  "Carlo": {
+    alias: "The Maestro",
+    tags: ["Italian", "Dramatic", "Operatic"],
+    description: "A dramatic Italian male voice with operatic flair. Ideal for classical literature, art documentaries, and passionate storytelling.",
     gender: "Male",
     accent: "Italian",
+    age: "Adult",
     language: "Italian",
-    age: "Adult"
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/it/elv-041.mp3"
   },
   "Francesca": {
     alias: "La Voce",
@@ -186,36 +130,20 @@ export const voiceMetadata = {
     gender: "Female",
     accent: "Italian",
     language: "Italian",
-    age: "Adult"
-  },
-  "Marco": {
-    alias: "L'Amico",
-    tags: ["Italian", "Friendly", "Casual"],
-    description: "Casual and friendly Italian male voice. Ideal for blogs, podcasts, and informal conversation.",
-    gender: "Male",
-    accent: "Italian",
-    language: "Italian",
-    age: "Young Adult"
+    age: "Adult",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/it/francesca-it-5k2m8p3r.mp3"
   },
 
-  // --- JAPANESE (3 Voices) ---
-  "Yoko": {
-    alias: "The Innovator",
-    tags: ["Japanese", "Soft", "Modern"],
-    description: "Soft, polite, and modern voice ideal for Japanese narration, tech innovations, and cultural stories.",
-    gender: "Female",
-    accent: "Japanese",
-    language: "Japanese",
-    age: "Young Adult"
-  },
+  // --- JAPANESE (2 Voices) ---
   "Kenji": {
-    alias: "The Samurai",
-    tags: ["Japanese", "Deep", "Traditional"],
-    description: "Deep and resonant Japanese male voice. Perfect for historical content, serious drama, and traditional storytelling.",
+    alias: "The Gamer",
+    tags: ["Japanese", "Energetic", "Anime"],
+    description: "An energetic Japanese male voice. Perfect for anime, gaming content, and dynamic storytelling.",
     gender: "Male",
     accent: "Japanese",
+    age: "Young Adult",
     language: "Japanese",
-    age: "Adult"
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/kenji-ja-5jsnaz68.mp3"
   },
   "Sakura": {
     alias: "The Idol",
@@ -224,18 +152,20 @@ export const voiceMetadata = {
     gender: "Female",
     accent: "Japanese",
     language: "Japanese",
-    age: "Young Adult"
+    age: "Young Adult",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/ja/sakura-ja-7p3k9m2n.mp3"
   },
 
   // --- PORTUGUESE (2 Voices) ---
-  "Camila": {
-    alias: "A Voz",
-    tags: ["Portuguese", "Smooth", "Melodic"],
-    description: "Smooth and melodic Portuguese female voice. Excellent for narration, poetry, and emotional content.",
+  "Helena": {
+    alias: "The Explorer",
+    tags: ["Portuguese", "Adventurous", "Warm"],
+    description: "An adventurous Portuguese female voice. Perfect for travel content, exploration narratives, and cultural storytelling.",
     gender: "Female",
-    accent: "Brazilian",
+    accent: "Portuguese (Brazil)",
+    age: "Adult",
     language: "Portuguese",
-    age: "Adult"
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/pt/elv-042.mp3"
   },
   "Thiago": {
     alias: "O Narrador",
@@ -244,18 +174,20 @@ export const voiceMetadata = {
     gender: "Male",
     accent: "Brazilian",
     language: "Portuguese",
-    age: "Adult"
+    age: "Adult",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/pt/thiago-pt-8k4m2p9n.mp3"
   },
 
   // --- POLISH (2 Voices) ---
-  "Kacper": {
-    alias: "Lektor",
-    tags: ["Polish", "Deep", "Radio"],
-    description: "Deep, radio-quality Polish male voice. Perfect for audiobooks, commercials, and professional dubbing.",
+  "Marek": {
+    alias: "The Dreamer",
+    tags: ["Polish", "Soft", "Mystical"],
+    description: "A soft, mystical Polish male voice. Perfect for fairy tales, fantasy content, and dreamlike narratives.",
     gender: "Male",
     accent: "Polish",
+    age: "Adult",
     language: "Polish",
-    age: "Adult"
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/pl/elv-044.mp3"
   },
   "Zuzanna": {
     alias: "Opowiadaczka",
@@ -264,7 +196,8 @@ export const voiceMetadata = {
     gender: "Female",
     accent: "Polish",
     language: "Polish",
-    age: "Adult"
+    age: "Adult",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/pl/zuzanna-pl-3k7m9p2n.mp3"
   },
 
   // --- HINDI (2 Voices) ---
@@ -285,80 +218,11 @@ export const voiceMetadata = {
     gender: "Female",
     accent: "Indian",
     language: "Hindi",
-    age: "Young Adult"
+    age: "Young Adult",
+    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/hi/ananya-hi-2k8m4p7n.mp3"
   },
 
-  // --- NEW Foreign Language Voices (Expanded Set) ---
-  "Elena": {
-    alias: "The Matador",
-    tags: ["Spanish", "Dramatic", "Passionate"],
-    description: "A passionate Spanish female voice with deep emotional range. Perfect for dramatic storytelling, poetry, and intense narratives.",
-    gender: "Female",
-    accent: "Spanish (Spain)",
-    age: "Adult",
-    language: "Spanish",
-    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/es/elv-038.mp3"
-  },
-  "Marc": {
-    alias: "The Poet",
-    tags: ["French", "Soft", "Lyrical"],
-    description: "A soft, lyrical French male voice. Bringing the charm of Paris to life, ideal for romance, poetry, and artistic narration.",
-    gender: "Male",
-    accent: "French",
-    age: "Adult",
-    language: "French",
-    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/fr/elv-039.mp3"
-  },
-  "Ingrid": {
-    alias: "The Historian",
-    tags: ["German", "Deep", "Serious"],
-    description: "A deep, resonant German female voice. Perfect for historical documentaries, serious non-fiction, and authoritative news delivery.",
-    gender: "Female",
-    accent: "German",
-    age: "Adult",
-    language: "German",
-    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/de/elv-040.mp3"
-  },
-  "Carlo": {
-    alias: "The Maestro",
-    tags: ["Italian", "Dramatic", "Operatic"],
-    description: "A dramatic Italian male voice with operatic flair. Ideal for classical literature, art documentaries, and passionate storytelling.",
-    gender: "Male",
-    accent: "Italian",
-    age: "Adult",
-    language: "Italian",
-    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/it/elv-041.mp3"
-  },
-  "Helena": {
-    alias: "The Explorer",
-    tags: ["Portuguese", "Adventurous", "Warm"],
-    description: "An adventurous Portuguese female voice. Perfect for travel content, exploration narratives, and cultural storytelling.",
-    gender: "Female",
-    accent: "Portuguese (Brazil)",
-    age: "Adult",
-    language: "Portuguese",
-    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/pt/elv-042.mp3"
-  },
-  "Marek": {
-    alias: "The Dreamer",
-    tags: ["Polish", "Soft", "Mystical"],
-    description: "A soft, mystical Polish male voice. Perfect for fairy tales, fantasy content, and dreamlike narratives.",
-    gender: "Male",
-    accent: "Polish",
-    age: "Adult",
-    language: "Polish",
-    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/pl/elv-044.mp3"
-  },
-  "Kenji": {
-    alias: "The Gamer",
-    tags: ["Japanese", "Energetic", "Anime"],
-    description: "An energetic Japanese male voice. Perfect for anime, gaming content, and dynamic storytelling.",
-    gender: "Male",
-    accent: "Japanese",
-    age: "Young Adult",
-    language: "Japanese",
-    preview_url: "https://d2xsxph8kpxj0f.cloudfront.net/310519663033481742/BF5mZTywynUFdRgyfDscK7/voice-samples/kenji-ja-5jsnaz68.mp3"
-  },
+  // --- Additional Foreign Language Voices ---
   "Soo-jin": {
     alias: "The K-Drama Star",
     tags: ["Korean", "Emotional", "Dramatic"],
